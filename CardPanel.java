@@ -9,7 +9,7 @@ import java.awt.GridLayout;
  * CardPanel
  */
 public class CardPanel extends JPanel {
-    private JPanel cardOne, cardTwo, cardThree, cardFour;
+    private JPanel cardOne, cardTwo, cardThree, cardFour, cardFive;
     private JButton hit, stick;
 
     public CardPanel(){
@@ -24,11 +24,13 @@ public class CardPanel extends JPanel {
         cardTwo = new JPanel();
         cardThree = new JPanel();
         cardFour = new JPanel();
+        cardFive = new JPanel();
         this.add(hit);
         this.add(cardOne);
         this.add(cardTwo);
         this.add(cardThree);
-        this.add(cardFour);
+        this.add(cardFour); 
+        this.add(cardFive);
         this.add(stick);
         
     }

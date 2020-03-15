@@ -25,18 +25,19 @@ public class Swing extends JFrame {
         gameInfo.setBackground(darkGreen);
         gameInfo.setLayout(new GridLayout());
         gameInfoLabel = new JLabel("Game Info", SwingConstants.CENTER);
-        gameInfoLabel.setFont(new Font("Serif", Font.BOLD, 48));
+        gameInfoLabel.setFont(new Font("Serif", Font.BOLD, 35));
         gameInfoLabel.setForeground(Color.yellow);
         gameInfo.add(gameInfoLabel);
 
 
         playerCards = new CardPanel();
-        moneyPot = new JPanel();
+        moneyPot = new BettingPanel();
 
 
         main.add(dealer);
         main.add(gameInfo);
         main.add(playerCards);
+        main.add(moneyPot);
         this.add(main);
         this.pack();
         this.setResizable(true);
