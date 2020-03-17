@@ -34,8 +34,7 @@ public class SwingGameClient extends JFrame implements ActionListener {
         public Void doInBackground() {
             GameStats gs = null;
             try {
-                while ((gs = (GameStats) inputStream.readObject()) != null)
-                    ;
+                while ((gs = (GameStats) inputStream.readObject()) != null);
                 // what to do with input ie. game stats
 
             } catch (ClassNotFoundException e) {
@@ -90,6 +89,19 @@ public class SwingGameClient extends JFrame implements ActionListener {
         }
     }
 
+    
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+
+
+
+
+
     public void initializeComponents() {
         userCardOne = main.getUserCardOne();
         userCardTwo = main.getUserCardTwo();
@@ -118,10 +130,8 @@ public class SwingGameClient extends JFrame implements ActionListener {
         bet50Button.addActionListener(this);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
 
+    public static void main(String[] args) {
+        new SwingGameClient(0);
     }
-
 }

@@ -1,11 +1,14 @@
 package model;
 
+import model.enums.*;
+
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * GameStats
  */
-public class GameStats {
+public class GameStats implements Serializable{
     private int noCardsInDeck;
     private int activePlayer;
     private HashMap<Integer, Player> players;
@@ -26,6 +29,9 @@ public class GameStats {
     }
     public int getActivePlayer(){
         return this.activePlayer;
+    }
+    public int getNoCardsInDeck(){
+        return this.noCardsInDeck;
     }
     
 }

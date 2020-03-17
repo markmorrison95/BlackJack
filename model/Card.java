@@ -1,4 +1,5 @@
 package model;
+import model.enums.*;
 
 /**
  * Card
@@ -6,7 +7,7 @@ package model;
 public class Card implements Comparable<Card> {
     private CardRank rank;
     private Suit suit;
-    public Card(CardRank rank, Suit suit){
+    public Card(Suit suit, CardRank rank){
         this.suit = suit;
         this.rank = rank;
     }

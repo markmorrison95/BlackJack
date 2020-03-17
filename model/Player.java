@@ -1,24 +1,21 @@
 package model;
 
 import java.util.ArrayList;
-
 /**
  * Player
  */
-public class Player {
+public class Player extends ArrayList<Card>{
     private static int nextIdNumber = 0;
     private int ID;
-    private ArrayList<Card> handOfCards;
     private int money;
     public Player(){
         ID = nextIdNumber;
         nextIdNumber++;
-        handOfCards = new ArrayList<>();
         money = 200;
 
     }
     public ArrayList<Card> getHand(){
-        return this.handOfCards;
+        return this;
     }
 
     public int removeMoney(int amount){
@@ -35,11 +32,19 @@ public class Player {
     }
 
     public void addCard(Card card){
-        handOfCards.add(card);
+       this.add(card);
     }
     public ArrayList<Card> getAndRemoveAllCards(){
-        ArrayList<Card>  currentHand = handOfCards;
-        handOfCards = new ArrayList<>();
+        ArrayList<Card>  currentHand = this;
+        this.clear();
         return currentHand;
+    }
+
+    public int getCurrentScore(){
+        int currentScore = 0;
+        for(Card c : this){
+            currentScore += c.getCardRank().cardValue();
+        }
+        return currentScore;
     }
 }
