@@ -8,14 +8,17 @@ import java.util.ArrayList;
 public class Player {
     private static int nextIdNumber = 0;
     private int ID;
-    private ArrayList<Card> cards;
+    private ArrayList<Card> handOfCards;
     private int money;
     public Player(){
         ID = nextIdNumber;
         nextIdNumber++;
-        cards = new ArrayList<>();
+        handOfCards = new ArrayList<>();
         money = 200;
 
+    }
+    public ArrayList<Card> getHand(){
+        return this.handOfCards;
     }
 
     public int removeMoney(int amount){
@@ -32,11 +35,11 @@ public class Player {
     }
 
     public void addCard(Card card){
-        cards.add(card);
+        handOfCards.add(card);
     }
     public ArrayList<Card> getAndRemoveAllCards(){
-        ArrayList<Card>  currentHand = cards;
-        cards = new ArrayList<>();
+        ArrayList<Card>  currentHand = handOfCards;
+        handOfCards = new ArrayList<>();
         return currentHand;
     }
 }

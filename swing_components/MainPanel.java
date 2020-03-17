@@ -1,24 +1,17 @@
 import javax.swing.*;
-
-import org.w3c.dom.Text;
-
 import java.awt.*;
-import java.awt.GridLayout;
 
 /**
  * Swing
  */
-public class Swing extends JFrame {
+public class MainPanel extends JPanel {
     JPanel main, dealer, gameInfo, playerCards, moneyPot;
     JLabel gameInfoLabel;
 
-    public Swing() {
-        this.setTitle("BlackJack");
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+    public MainPanel() {
         Color darkGreen = new Color(0, 102, 0);
-        main = new JPanel();
-        main.setBackground(darkGreen);
-        main.setLayout(new GridLayout(4, 1));
+        this.setBackground(darkGreen);
+        this.setLayout(new GridLayout(4, 1));
         dealer = new DealerPanel();
 
         gameInfo = new JPanel();
@@ -34,14 +27,9 @@ public class Swing extends JFrame {
         moneyPot = new BettingPanel();
 
 
-        main.add(dealer);
-        main.add(gameInfo);
-        main.add(playerCards);
-        main.add(moneyPot);
-        this.add(main);
-        this.pack();
-        this.setResizable(true);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
+        this.add(dealer);
+        this.add(gameInfo);
+        this.add(playerCards);
+        this.add(moneyPot);
     }
 }

@@ -6,7 +6,7 @@ import javax.swing.JWindow;
 public class mainTest {
 
     public static void main(String[] args) {
-        new Swing();
+        new MainPanel();
 
     }
 }
