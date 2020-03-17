@@ -11,4 +11,11 @@ public class Bet implements Serializable{
         this.playerID = playerID;
         this.betAmount = betAmount;
     }
+
+    public int getBetAmount(){
+        return this.betAmount;
+    }
+    public int getPlayerId(){
+        return this.playerID;
+    }
 }
