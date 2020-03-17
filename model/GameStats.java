@@ -33,6 +33,10 @@ public class GameStats implements Serializable{
         return this.activePlayer;
     }
     public int getNoCardsInDeck(){
+        /**
+         * signals if the deck has less than 6 cards left and the used cards
+         * should be added back in and all cards re shuffled
+         */
         return this.noCardsInDeck;
     }
     

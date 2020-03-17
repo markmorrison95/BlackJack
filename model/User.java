@@ -5,11 +5,9 @@ import java.util.ArrayList;
  * Player
  */
 public class User extends Player{
-    private static int nextIdNumber = 1;
     private int money;
-    public User(){
-        super(nextIdNumber);
-        nextIdNumber++;
+    public User(int ID){
+        super(ID);
         money = 200;
     }
 

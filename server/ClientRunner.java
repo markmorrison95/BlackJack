@@ -12,11 +12,13 @@ import model.GameStats;
  */
 public class ClientRunner implements Runnable {
     private Socket socket = null;
+    private GameServer parent = null;
     private ObjectInputStream inputStream = null;
     private ObjectOutputStream outputStream = null;
 
-    public ClientRunner(Socket socket) {
+    public ClientRunner(Socket socket, GameServer parent) {
         this.socket = socket;
+        this.parent = parent;
         try{
             outputStream = new ObjectOutputStream(this.socket.getOutputStream());
             inputStream = new ObjectInputStream(this.socket.getInputStream());

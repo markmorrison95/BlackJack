@@ -24,4 +24,7 @@ public class Deck extends ArrayList<Card>{
     public void shuffleDeck(){
         Collections.shuffle(this);
     }
+    public boolean refillTime(){
+        return(this.size() < 6);
+    }
 }

@@ -56,8 +56,7 @@ public class SwingGameClient extends JFrame implements ActionListener {
     private JButton hitButton, stickButton, bet50Button, bet20Button, bet10Button;
     private JLabel dealerScoreLabel, currentBalanceLabel, currentBetLabel, gameInfoLabel, userScoreLabel;
 
-    public SwingGameClient(int ID) {
-        this.ID = ID;
+    public SwingGameClient() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         main = new MainPanel();
         this.add(main);
@@ -78,6 +77,8 @@ public class SwingGameClient extends JFrame implements ActionListener {
     public void connect() {
         try {
             server = new Socket("127.0.0.1", 8765);
+            ObjectInputStream input = new ObjectInputStream(server.getInputStream());
+            this.ID = (int)input.readInt();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -132,6 +133,6 @@ public class SwingGameClient extends JFrame implements ActionListener {
 
 
     public static void main(String[] args) {
-        new SwingGameClient(0);
+        new SwingGameClient();
     }
 }

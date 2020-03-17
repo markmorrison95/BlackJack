@@ -1,21 +1,25 @@
 package server;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import controller.Controller;
 import model.GameStats;
 
 /**
  * GameServer
  */
 public class GameServer implements Runnable {
-
+    private static int clientID = 1;
+    private Controller controller;
     private ServerSocket serverSocket = null;
     private ArrayList<ClientRunner> clients = new ArrayList<ClientRunner>();
 
-    public GameServer() {
+    public GameServer(Controller controller) {
+        this.controller = controller;
         try {
             serverSocket = new ServerSocket(8765);
         } catch (IOException e) {
@@ -28,7 +32,12 @@ public class GameServer implements Runnable {
             Socket clientSocket = null;
             try {
                 clientSocket = serverSocket.accept();
-                ClientRunner client = new ClientRunner(clientSocket);
+                ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+                outputStream.writeInt(clientID);
+                outputStream.flush();
+                controller.addUser(clientID);
+                clientID++;
+                ClientRunner client = new ClientRunner(clientSocket, this);
                 clients.add(client);
                 new Thread(client).start();
             } catch (IOException e) {
@@ -43,16 +52,6 @@ public class GameServer implements Runnable {
             if (cr != null) {
                 cr.transmitGameStats(gs);
             }
-        }
-    }
-
-    public static void main(String[] args) {
-        Thread t = new Thread(new GameServer());
-        t.start();
-        try {
-            t.join();
-        }catch(InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
