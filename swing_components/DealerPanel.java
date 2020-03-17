@@ -1,3 +1,5 @@
+package swing_components;
+
 import java.awt.Color;
 import java.awt.Font;
 

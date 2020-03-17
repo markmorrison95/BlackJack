@@ -1,3 +1,5 @@
+package swing_components;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -31,5 +33,27 @@ public class MainPanel extends JPanel {
         this.add(gameInfo);
         this.add(playerCards);
         this.add(moneyPot);
+    }
+
+    public JPanel getUserCardOne(){
+        return playerCards.getCardOne();
+    }
+    public JPanel getUserCardTwo(){
+        return playerCards.getCardTwo();
+    }
+    public JPanel getUserCardThree(){
+        return playerCards.getCardthree();
+    }
+    public JPanel getUserCardFour(){
+        return playerCards.getCardFour();
+    }
+    public JPanel getUserCardFive(){
+        return playerCards.getCardFive();
+    }
+    public JButton getUserHitButton(){
+        return playerCards.getHitButton();
+    }
+    public JButton getUserStickButton(){
+        return playerCards.getStickButton();   
     }
 }

@@ -1,3 +1,5 @@
+package swing_components;
+
 import java.awt.Color;
 
 import javax.swing.JButton;
@@ -33,5 +35,26 @@ public class CardPanel extends JPanel {
         this.add(cardFive);
         this.add(stick);
         
+    }
+    public JPanel getCardOne(){
+        return this.cardOne;
+    }
+    public JPanel getCardTwo(){
+        return this.cardTwo;
+    }
+    public JPanel getCardThree(){
+        return this.cardThree;
+    }
+    public JPanel getCardFour(){
+        return this.cardFour;
+    }
+    public JPanel getCardFive(){
+        return this.cardFive;
+    }
+    public JButton getHitButton(){
+        return this.hit;
+    }
+    public JButton getStickButton(){
+        return this.stick;
     }
 }

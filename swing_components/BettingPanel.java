@@ -1,3 +1,5 @@
+package swing_components;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.Color;
@@ -90,5 +92,24 @@ public class BettingPanel extends JPanel {
         bottom.add(bottomRight);
         this.add(top);
         this.add(bottom);
+    }
+
+    public JButton getFiftyButton(){
+        return this.fifty;
+    }
+
+    public JButton getTwentyButton(){
+        return this.twenty;
+    }
+
+    public JButton getTenButton(){
+        return this.ten;
+    }
+
+    public JLabel getCurrentBalanceLabel(){
+        return this.currentBalance;
+    }
+    public JLabel getCurrentBetLabel(){
+        return this.currentBet;
     }
 }

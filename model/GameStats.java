@@ -24,5 +24,8 @@ public class GameStats {
     public void setActivePlayer(int id){
         activePlayer = id;
     }
+    public int getActivePlayer(){
+        return this.activePlayer;
+    }
     
 }
