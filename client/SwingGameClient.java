@@ -41,6 +41,7 @@ public class SwingGameClient extends JFrame implements ActionListener {
             try {
                 gs = (GameStats)inputStream.readObject();
                 // what to do with input ie. game stats
+                /******************************************************** */
                 System.out.println(gs.getPlayerMap().get(ID).get(0));
                 parent.updateUserCards(gs);
 
@@ -102,6 +103,9 @@ public class SwingGameClient extends JFrame implements ActionListener {
     public void updateUserCards(GameStats gs){
         ArrayList<Card> uCards = gs.getPlayerMap().get(ID);
         for(int i = 0; i < uCards.size(); i++){
+            /*************************************************************************
+             * adds card to string to new jpanel on user cards 
+             */
             userCards[i].add(new JLabel(uCards.get(i).toString()));
         }
     }

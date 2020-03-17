@@ -28,6 +28,8 @@ public class ClientRunner implements Runnable {
     }
     public void run(){
         //what happens while client is connected
+
+        //********************************* */
         parent.newGame();
         parent.transmitStatsToAll();
     }

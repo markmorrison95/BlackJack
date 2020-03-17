@@ -49,6 +49,7 @@ public class GameServer implements Runnable {
     }
 
     public void newGame(){
+        /********************************************* */
         controller.dealCards();
     }
 
