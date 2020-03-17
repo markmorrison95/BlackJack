@@ -1,39 +1,20 @@
 package model;
 
 import java.util.ArrayList;
+
 /**
- * Player
+ * playerAbstract
  */
 public class Player extends ArrayList<Card>{
-    private static int nextIdNumber = 0;
     private int ID;
-    private int money;
-    public Player(){
-        ID = nextIdNumber;
-        nextIdNumber++;
-        money = 200;
-
-    }
-    public ArrayList<Card> getHand(){
-        return this;
-    }
-
-    public int removeMoney(int amount){
-        money -= amount;
-        return amount;
-    }
-
-    public void addMoney(int amount){
-        money += amount;
+    public Player(int ID){
+        this.ID = ID;
     }
 
     public int getID(){
         return this.ID;
     }
 
-    public void addCard(Card card){
-       this.add(card);
-    }
     public ArrayList<Card> getAndRemoveAllCards(){
         ArrayList<Card>  currentHand = this;
         this.clear();
@@ -47,4 +28,5 @@ public class Player extends ArrayList<Card>{
         }
         return currentScore;
     }
+    
 }

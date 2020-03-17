@@ -1,7 +1,5 @@
 package model;
 
-import model.enums.*;
-
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -17,6 +15,10 @@ public class GameStats implements Serializable{
         noCardsInDeck = mainDeck.size();
         players = new HashMap<>();
         activePlayer = 0;
+    }
+
+    public HashMap<Integer, Player> getPlayerMap(){
+        return this.players;
     }
 
     public void addPlayer(Player player){

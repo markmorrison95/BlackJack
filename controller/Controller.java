@@ -2,7 +2,9 @@ package controller;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Map.Entry;
 
 import model.*;
 import model.enums.CardRank;
@@ -15,12 +17,29 @@ public class Controller {
 
     GameStats gameStats;
     Deck mainDeck, usedDeck;
+    Dealer dealer;
 
     public Controller() {
         mainDeck = new Deck();
         gameStats = new GameStats(mainDeck);
         readInCards();
         mainDeck.shuffleDeck();
+        dealer = new Dealer();
+        gameStats.addPlayer(dealer);
+    }
+
+    public void addUser() {
+        gameStats.addPlayer(new User());
+    }
+
+    public void dealCards(){
+        HashMap<Integer, Player> players = gameStats.getPlayerMap();
+        for(int i=0; i<2; i++){
+            for(Entry<Integer, Player> player : players.entrySet()) {
+                Player p = player.getValue();
+                p.add(mainDeck.getAndRemoveCard());
+            }
+        }
     }
 
 
