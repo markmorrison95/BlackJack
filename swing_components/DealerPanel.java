@@ -15,7 +15,7 @@ import javax.swing.border.EmptyBorder;
  */
 public class DealerPanel extends JPanel{
     private JPanel cardOne, cardTwo, cardThree, cardFour, cardFive, dealerInfo;
-    private JLabel dealerScore, dealerConstant;
+    private JLabel dealerScore;
 
     public DealerPanel(){
         Color darkGreen = new Color(0, 102, 0);
@@ -32,7 +32,7 @@ public class DealerPanel extends JPanel{
         dealerInfo = new JPanel();
         dealerInfo.setBackground(darkGreen);
         dealerInfo.setLayout(new GridLayout(2,1));
-        dealerConstant = new JLabel("Dealer\nScore:", SwingConstants.CENTER);
+        JLabel dealerConstant = new JLabel("Dealer\nScore:", SwingConstants.CENTER);
         dealerConstant.setFont(new Font("Serif", Font.BOLD, 12));
         dealerConstant.setForeground(Color.yellow);
         dealerScore = new JLabel("11", SwingConstants.CENTER);
@@ -46,5 +46,24 @@ public class DealerPanel extends JPanel{
         this.add(cardFour); 
         this.add(cardFive);
         this.add(dealerInfo);
+    }
+
+    public JPanel getCardOne(){
+        return this.cardOne;
+    }
+    public JPanel getCardTwo(){
+        return this.cardTwo;
+    }
+    public JPanel getCardThree(){
+        return this.cardThree;
+    }
+    public JPanel getCardFour(){
+        return this.cardFour;
+    }
+    public JPanel getCardFive(){
+        return this.cardFive;
+    }
+    public JLabel getDealerScoreLabel(){
+        return this.dealerScore;
     }
 }

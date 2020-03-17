@@ -15,7 +15,7 @@ import java.awt.GridLayout;
  */
 public class BettingPanel extends JPanel {
     private JButton fifty, twenty, ten;
-    private JLabel currentBalance, currentBet;
+    private JLabel currentBalance, currentBet, currentScore;
 
     public BettingPanel() {
         Color darkGreen = new Color(0, 102, 0);
@@ -29,8 +29,22 @@ public class BettingPanel extends JPanel {
         topLeft.setLayout(new GridLayout(2, 1));
         topLeft.setBackground(darkGreen);
         topLeft.setBorder(new EmptyBorder(10, 30, 10, 10));
-        JPanel blank = new JPanel();
-        blank.setBackground(darkGreen);
+        JPanel topRight = new JPanel();
+        topRight.setBackground(darkGreen);
+        topRight.setLayout(new GridLayout(2, 1));
+
+        JLabel currentScoreConstant = new JLabel("Your Current Score:");
+        currentScoreConstant.setFont(new Font("Serif", Font.BOLD, 18));
+        currentScoreConstant.setForeground(Color.yellow);
+        currentScoreConstant.setBackground(darkGreen);
+
+        currentScore = new JLabel("10");
+        currentScore.setFont(new Font("Serif", Font.BOLD, 18));
+        currentScore.setForeground(Color.yellow);
+        currentScore.setBackground(darkGreen);
+
+        topRight.add(currentScoreConstant);
+        topRight.add(currentScore);
 
         JLabel currentBalanceConstant = new JLabel("Your Balance:", SwingConstants.LEFT);
         currentBalanceConstant.setFont(new Font("Serif", Font.BOLD, 18));
@@ -48,7 +62,7 @@ public class BettingPanel extends JPanel {
 
 
         top.add(topLeft);
-        top.add(blank);
+        top.add(topRight);
 
         JLabel currentBetConstant = new JLabel("CurrentBet:", SwingConstants.RIGHT);
         currentBetConstant.setFont(new Font("Serif", Font.BOLD, 18));
@@ -111,5 +125,8 @@ public class BettingPanel extends JPanel {
     }
     public JLabel getCurrentBetLabel(){
         return this.currentBet;
+    }
+    public JLabel getCurrentScoreLabel(){
+        return this.currentScore;
     }
 }

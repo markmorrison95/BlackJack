@@ -7,7 +7,10 @@ import java.awt.*;
  * Swing
  */
 public class MainPanel extends JPanel {
-    JPanel main, dealer, gameInfo, playerCards, moneyPot;
+    DealerPanel dealer;
+    JPanel gameInfo;
+    BettingPanel bettingPanel;
+    CardPanel playerCards;
     JLabel gameInfoLabel;
 
     public MainPanel() {
@@ -26,13 +29,13 @@ public class MainPanel extends JPanel {
 
 
         playerCards = new CardPanel();
-        moneyPot = new BettingPanel();
+        bettingPanel = new BettingPanel();
 
 
         this.add(dealer);
         this.add(gameInfo);
         this.add(playerCards);
-        this.add(moneyPot);
+        this.add(bettingPanel);
     }
 
     public JPanel getUserCardOne(){
@@ -42,7 +45,7 @@ public class MainPanel extends JPanel {
         return playerCards.getCardTwo();
     }
     public JPanel getUserCardThree(){
-        return playerCards.getCardthree();
+        return playerCards.getCardThree();
     }
     public JPanel getUserCardFour(){
         return playerCards.getCardFour();
@@ -55,5 +58,44 @@ public class MainPanel extends JPanel {
     }
     public JButton getUserStickButton(){
         return playerCards.getStickButton();   
+    }
+    public JPanel getDealerCardOne(){
+        return dealer.getCardOne();
+    }
+    public JPanel getDealerCardTwo(){
+        return dealer.getCardTwo();
+    }
+    public JPanel getDealerCardThree(){
+        return dealer.getCardThree();
+    }
+    public JPanel getDealerCardFour(){
+        return dealer.getCardFour();
+    }
+    public JPanel getDealerCardFive(){
+        return dealer.getCardFive();
+    }
+    public JLabel getDealerScoreLabel(){
+        return dealer.getDealerScoreLabel();
+    }
+    public JButton getFiftyButton(){
+        return bettingPanel.getFiftyButton();
+    }
+    public JButton getTwentyButton(){
+        return bettingPanel.getTwentyButton();
+    }
+    public JButton getTenButton(){
+        return bettingPanel.getTenButton();
+    }
+    public JLabel getCurrentBalanceLabel(){
+        return bettingPanel.getCurrentBalanceLabel();
+    }
+    public JLabel getCurrentBetLabel(){
+        return bettingPanel.getCurrentBetLabel();
+    }
+    public JLabel getGameInfoLabel(){
+        return this.gameInfoLabel;
+    }
+    public JLabel getUserCurrentScoreLabel(){
+        return bettingPanel.getCurrentScoreLabel();
     }
 }
