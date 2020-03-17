@@ -98,4 +98,16 @@ public class MainPanel extends JPanel {
     public JLabel getUserCurrentScoreLabel(){
         return bettingPanel.getCurrentScoreLabel();
     }
+
+
+
+    public JPanel[] getUserCardPanels(){
+        JPanel[] pcards = new JPanel[5];
+        pcards[0] = playerCards.getCardOne();
+        pcards[1] = playerCards.getCardTwo();
+        pcards[2] = playerCards.getCardThree();
+        pcards[3] = playerCards.getCardFour();
+        pcards[4] = playerCards.getCardFive();
+        return pcards;
+    }
 }

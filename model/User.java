@@ -1,10 +1,10 @@
 package model;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 /**
  * Player
  */
-public class User extends Player{
+public class User extends Player implements Serializable{
     private int money;
     public User(int ID){
         super(ID);

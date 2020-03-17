@@ -1,12 +1,13 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
 /**
  * Deck
  */
-public class Deck extends ArrayList<Card>{
+public class Deck extends ArrayList<Card> implements Serializable{
 
     public Deck(){
     }

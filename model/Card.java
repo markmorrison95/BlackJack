@@ -1,10 +1,13 @@
 package model;
+
+import java.io.Serializable;
+
 import model.enums.*;
 
 /**
  * Card
  */
-public class Card implements Comparable<Card> {
+public class Card implements Comparable<Card>, Serializable{
     private CardRank rank;
     private Suit suit;
     public Card(Suit suit, CardRank rank){
@@ -22,6 +25,9 @@ public class Card implements Comparable<Card> {
     }
     public Suit getCardSuit(){
         return this.suit;
+    }
+    public String toString(){
+        return "" + suit.name() + rank.cardValue();
     }
 
 }

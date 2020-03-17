@@ -1,9 +1,11 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Bank
  */
-public class Bank {
+public class Bank implements Serializable{
 
     private int money;
 

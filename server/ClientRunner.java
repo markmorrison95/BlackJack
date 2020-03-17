@@ -28,12 +28,15 @@ public class ClientRunner implements Runnable {
     }
     public void run(){
         //what happens while client is connected
+        parent.newGame();
+        parent.transmitStatsToAll();
     }
 
     public void transmitGameStats(GameStats gs){
         // transmit game stats to client connected to this thread
         try{
             outputStream.writeObject(gs);
+            outputStream.flush();
         }catch(IOException e){
             e.printStackTrace();
         }

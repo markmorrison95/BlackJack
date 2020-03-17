@@ -15,11 +15,13 @@ import model.GameStats;
 public class GameServer implements Runnable {
     private static int clientID = 1;
     private Controller controller;
+    private GameStats gameStats;
     private ServerSocket serverSocket = null;
     private ArrayList<ClientRunner> clients = new ArrayList<ClientRunner>();
 
-    public GameServer(Controller controller) {
+    public GameServer(Controller controller, GameStats gameStats) {
         this.controller = controller;
+        this.gameStats = gameStats;
         try {
             serverSocket = new ServerSocket(8765);
         } catch (IOException e) {
@@ -46,11 +48,15 @@ public class GameServer implements Runnable {
         }
     }
 
-    public void transmitStatsToAll(GameStats gs) {
+    public void newGame(){
+        controller.dealCards();
+    }
+
+    public void transmitStatsToAll() {
         // send game stats to all clients connected
         for (ClientRunner cr : clients) {
             if (cr != null) {
-                cr.transmitGameStats(gs);
+                cr.transmitGameStats(gameStats);
             }
         }
     }

@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+
 import javax.swing.*;
+
+import model.Card;
 import model.GameStats;
 import swing_components.*;
 
@@ -33,12 +37,15 @@ public class SwingGameClient extends JFrame implements ActionListener {
 
         public Void doInBackground() {
             GameStats gs = null;
+            int i = -1;
             try {
-                while ((gs = (GameStats) inputStream.readObject()) != null);
+                gs = (GameStats)inputStream.readObject();
                 // what to do with input ie. game stats
+                System.out.println(gs.getPlayerMap().get(ID).get(0));
+                parent.updateUserCards(gs);
 
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            // } catch (ClassNotFoundException e) {
+            //     e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -51,7 +58,8 @@ public class SwingGameClient extends JFrame implements ActionListener {
     private ObjectOutputStream outputStream;
     private int ID;
     private MainPanel main;
-    private JPanel userCardOne, userCardTwo, userCardThree, userCardFour, userCardFive;
+    // private JPanel userCardOne, userCardTwo, userCardThree, userCardFour, userCardFive;
+    private JPanel[] userCards;
     private JPanel dealerCardOne, dealerCardTwo, dealerCardThree, dealerCardFour, dealerCardFive;
     private JButton hitButton, stickButton, bet50Button, bet20Button, bet10Button;
     private JLabel dealerScoreLabel, currentBalanceLabel, currentBetLabel, gameInfoLabel, userScoreLabel;
@@ -63,6 +71,7 @@ public class SwingGameClient extends JFrame implements ActionListener {
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+        initializeComponents();
         connect();
         try {
             outputStream = new ObjectOutputStream(server.getOutputStream());
@@ -90,6 +99,13 @@ public class SwingGameClient extends JFrame implements ActionListener {
         }
     }
 
+    public void updateUserCards(GameStats gs){
+        ArrayList<Card> uCards = gs.getPlayerMap().get(ID);
+        for(int i = 0; i < uCards.size(); i++){
+            userCards[i].add(new JLabel(uCards.get(i).toString()));
+        }
+    }
+
     
 
     @Override
@@ -104,11 +120,12 @@ public class SwingGameClient extends JFrame implements ActionListener {
 
 
     public void initializeComponents() {
-        userCardOne = main.getUserCardOne();
-        userCardTwo = main.getUserCardTwo();
-        userCardThree = main.getUserCardThree();
-        userCardFour = main.getUserCardFour();
-        userCardFive = main.getUserCardFive();
+        // userCardOne = main.getUserCardOne();
+        // userCardTwo = main.getUserCardTwo();
+        // userCardThree = main.getUserCardThree();
+        // userCardFour = main.getUserCardFour();
+        // userCardFive = main.getUserCardFive();
+        userCards = main.getUserCardPanels();
 
         dealerCardOne = main.getDealerCardOne();
         dealerCardTwo = main.getDealerCardTwo();

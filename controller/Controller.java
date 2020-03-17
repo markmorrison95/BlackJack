@@ -29,7 +29,8 @@ public class Controller {
         dealer = new Dealer();
         bank = new Bank();
         gameStats.addPlayer(dealer);
-        Thread t = new Thread(new GameServer(this));
+        dealCards();
+        Thread t = new Thread(new GameServer(this, gameStats));
         t.start();
         try {
             t.join();

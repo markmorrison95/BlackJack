@@ -1,11 +1,12 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * playerAbstract
  */
-public class Player extends ArrayList<Card>{
+public class Player extends ArrayList<Card> implements Serializable{
     private int ID;
     public Player(int ID){
         this.ID = ID;

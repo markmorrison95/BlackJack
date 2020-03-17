@@ -23,6 +23,7 @@ public class CardPanel extends JPanel {
         hit = new JButton("Hit");
         stick = new JButton("Stick");
         cardOne = new JPanel();
+        cardOne.setLayout(new GridLayout());
         cardTwo = new JPanel();
         cardThree = new JPanel();
         cardFour = new JPanel();
