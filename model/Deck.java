@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Deck
@@ -18,5 +19,9 @@ public class Deck extends ArrayList<Card>{
         Card top = this.get(0);
         this.remove(0);
         return top;
+    }
+
+    public void shuffleDeck(){
+        Collections.shuffle(this);
     }
 }
