@@ -57,6 +57,7 @@ public class ClientRunner implements Runnable {
         try {
             System.out.println(gs.get(1).size());
             outputStream.writeUnshared(gs);
+            outputStream.reset();
         }catch(IOException e){
             e.printStackTrace();
         }
