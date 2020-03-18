@@ -6,24 +6,25 @@ import java.util.HashMap;
 /**
  * GameStats
  */
-public class GameStats implements Serializable{
+public class GameStats extends HashMap<Integer, Player>{
     private int noCardsInDeck;
     private int activePlayer;
-    private HashMap<Integer, Player> players;
+    private int roundSize;
+    private boolean waitingForBets;
 
     public GameStats(Deck mainDeck){
+        roundSize = 1;
+        waitingForBets = true;
         noCardsInDeck = mainDeck.size();
-        players = new HashMap<>();
-        activePlayer = 0;
-    }
-
-    public HashMap<Integer, Player> getPlayerMap(){
-        return this.players;
+        activePlayer = 1;
     }
 
     public void addPlayer(Player player){
         Integer ID = player.getID();
-        players.put(ID, player);
+        this.put(ID, player);
+    }
+    public boolean isWaitingForBets(){
+        return waitingForBets;
     }
 
     public void setActivePlayer(int id){
@@ -39,5 +40,12 @@ public class GameStats implements Serializable{
          */
         return this.noCardsInDeck;
     }
-    
+    public void allBetsRecieved(){
+        waitingForBets = false;
+        int s = this.size();
+        roundSize = s;
+    }
+    public int getRoundSize(){
+        return this.roundSize;
+    }
 }

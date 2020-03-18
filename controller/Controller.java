@@ -20,6 +20,7 @@ public class Controller {
     Deck mainDeck, usedDeck;
     Dealer dealer;
     Bank bank;
+    GameServer gameServer;
 
     public Controller() {
         mainDeck = new Deck();
@@ -29,8 +30,7 @@ public class Controller {
         dealer = new Dealer();
         bank = new Bank();
         gameStats.addPlayer(dealer);
-        dealCards();
-        Thread t = new Thread(new GameServer(this, gameStats));
+        Thread t = new Thread(gameServer = new GameServer(this, gameStats));
         t.start();
         try {
             t.join();
@@ -43,13 +43,26 @@ public class Controller {
         if(mainDeck.refillTime()){
             refillDeck();
         }
-        gameStats.getPlayerMap().get(ID).add(mainDeck.getAndRemoveCard());
+        gameStats.get(ID).add(mainDeck.getAndRemoveCard());
     }
 
-    public void placeBet(int ID, int bet){
-        User u = (User)gameStats.getPlayerMap().get(ID);
-        u.removeMoney(bet);
-        bank.addMoney(bet);
+    public void placeBet(Bet bet){
+        User u = (User)gameStats.get(bet.getPlayerId());
+        bank.addMoney(u.removeMoney(bet.getBetAmount()));
+        if(bank.getNoBets() == (gameStats.size() - 1)){
+            bank.resetNoBets();
+            gameStats.allBetsRecieved();
+            dealCards();
+        }
+
+    }
+    public void hitCards(StickOrHit s){
+        if(mainDeck.refillTime()){
+            refillDeck();
+        }
+        gameStats.get(s.getID()).add(mainDeck.getAndRemoveCard());
+    }
+    public void stickCards(StickOrHit s){
 
     }
 
@@ -63,21 +76,19 @@ public class Controller {
          * checks if deck is empty and if so adds in the used cards
          * and then continues
          */
-        HashMap<Integer, Player> players = gameStats.getPlayerMap();
         for(int i=0; i<2; i++){
-            for(Entry<Integer, Player> player : players.entrySet()) {
+            for(int x = 0; x < gameStats.getRoundSize(); x++ ) {
                 if(mainDeck.refillTime()){
                     refillDeck();
                 }
-                Player p = player.getValue();
-                p.add(mainDeck.getAndRemoveCard());
+                gameStats.get(x).add(mainDeck.getAndRemoveCard());
             }
         }
+        gameServer.transmitStatsToAll();
     }
 
     public void removeAllPlayersHands(){
-        HashMap<Integer, Player> players = gameStats.getPlayerMap();
-            for(Entry<Integer, Player> player : players.entrySet()) {
+            for(Entry<Integer, Player> player : gameStats.entrySet()) {
                 usedDeck.addAll(player.getValue().getAndRemoveAllCards());
             }
     }

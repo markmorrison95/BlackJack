@@ -55,6 +55,9 @@ public class MainPanel extends JPanel {
     public JButton getTenButton(){
         return bettingPanel.getTenButton();
     }
+    public JButton getDealButton(){
+        return bettingPanel.getDealButton();
+    }
     public JLabel getCurrentBalanceLabel(){
         return bettingPanel.getCurrentBalanceLabel();
     }
@@ -66,6 +69,9 @@ public class MainPanel extends JPanel {
     }
     public JLabel getUserCurrentScoreLabel(){
         return bettingPanel.getCurrentScoreLabel();
+    }
+    public JLabel getNoPlayersLabel(){
+        return dealer.getNoPlayersLabel();
     }
 
     public JPanel[] getUserCardPanels(){

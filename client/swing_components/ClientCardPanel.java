@@ -21,7 +21,9 @@ public class ClientCardPanel extends JPanel {
         layout.setHgap(25);
         this.setLayout(layout);
         hit = new JButton("Hit");
+        hit.setEnabled(false);
         stick = new JButton("Stick");
+        stick.setEnabled(false);
         cardOne = new JPanel();
         cardOne.setLayout(new GridLayout());
         cardOne.setVisible(false);

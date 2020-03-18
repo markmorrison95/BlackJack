@@ -35,12 +35,12 @@ public class CardPanel extends JPanel {
         ImagePanel iTop = new ImagePanel(s);
         JPanel numberPanelTop = new JPanel();
         JLabel numberLabelTop = new JLabel(cv.toString());
-        numberLabelTop.setFont(new Font("Serif", Font.BOLD, 12));
+        numberLabelTop.setFont(new Font("Serif", Font.BOLD, 16));
         numberPanelTop.add(numberLabelTop);
         ImagePanel ipBottom = new ImagePanel(s);
         JPanel numberPanelBottom = new JPanel();
         JLabel numberLabelBottom = new JLabel(cv.toString());
-        numberLabelBottom.setFont(new Font("Serif", Font.BOLD, 12));
+        numberLabelBottom.setFont(new Font("Serif", Font.BOLD, 16));
         numberPanelBottom.add(numberLabelBottom);
         top.add(iTop);
         top.add(numberPanelTop);
@@ -59,7 +59,6 @@ public class CardPanel extends JPanel {
         private BufferedImage image;
         private String imagePath;
         public ImagePanel() {
-            this.setBorder(new EmptyBorder(10, 10, 10, 10));
            try {                
               image = ImageIO.read(new File("images/cardback.png"));
            } catch (IOException ex) {

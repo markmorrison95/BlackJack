@@ -4,7 +4,7 @@ import java.io.Serializable;
 /**
  * Player
  */
-public class User extends Player implements Serializable{
+public class User extends Player{
     private int money;
     public User(int ID){
         super(ID);

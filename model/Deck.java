@@ -7,7 +7,7 @@ import java.util.Collections;
 /**
  * Deck
  */
-public class Deck extends ArrayList<Card> implements Serializable{
+public class Deck extends ArrayList<Card>{
 
     public Deck(){
     }

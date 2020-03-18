@@ -7,7 +7,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import controller.Controller;
+import model.Bet;
 import model.GameStats;
+import model.StickOrHit;
 
 /**
  * GameServer
@@ -33,6 +35,7 @@ public class GameServer implements Runnable {
         while (true) {
             Socket clientSocket = null;
             try {
+                while(true){
                 clientSocket = serverSocket.accept();
                 ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
                 outputStream.writeInt(clientID);
@@ -42,15 +45,22 @@ public class GameServer implements Runnable {
                 ClientRunner client = new ClientRunner(clientSocket, this);
                 clients.add(client);
                 new Thread(client).start();
+                transmitStatsToAll();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
+    public void hitCards(StickOrHit stickOrHit){
 
-    public void newGame(){
-        /********************************************* */
-        controller.dealCards();
+    }
+    public void stickCards(StickOrHit stickOrHit){
+        
+    }
+
+    public void makeBet(Bet bet){
+        controller.placeBet(bet);
     }
 
     public void transmitStatsToAll() {
