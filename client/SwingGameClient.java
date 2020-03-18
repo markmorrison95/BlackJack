@@ -40,10 +40,10 @@ public class SwingGameClient extends JFrame implements ActionListener {
         public Void doInBackground() {
             GameStats gs = null;
             try {
-                while((gs = (GameStats)inputStream.readUnshared()) != null){
-                // what to do with input ie. game stats
-                /******************************************************** */
-                parent.updateGameInfo(gs);
+                while ((gs = (GameStats) inputStream.readUnshared()) != null) {
+                    // what to do with input ie. game stats
+                    /******************************************************** */
+                    parent.updateGameInfo(gs);
                 }
 
             } catch (ClassNotFoundException e) {
@@ -62,7 +62,8 @@ public class SwingGameClient extends JFrame implements ActionListener {
     private MainPanel main;
     private JPanel[] userCards, dealerCards;
     private JButton hitButton, stickButton, bet50Button, bet20Button, bet10Button, dealButton;
-    private JLabel dealerScoreLabel, currentBalanceLabel, currentBetLabel, gameInfoLabel, userScoreLabel, noPlayers;
+    private JLabel dealerScoreLabel, currentBalanceLabel, currentBetLabel, gameInfoLabel, activePlayerLabel,
+            userScoreLabel, noPlayers;
     private int currentBet;
 
     public SwingGameClient() {
@@ -88,28 +89,44 @@ public class SwingGameClient extends JFrame implements ActionListener {
         try {
             server = new Socket("127.0.0.1", 8765);
             ObjectInputStream input = new ObjectInputStream(server.getInputStream());
-            this.ID = (int)input.readInt();
+            this.ID = (int) input.readInt();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void updateGameInfo(GameStats gs) {
-        noPlayers.setText("" + (gs.size() -1));
+        noPlayers.setText("" + (gs.size() - 1));
         currentBalanceLabel.setText("" + gs.get(ID).getBalance());
-        if(!gs.isWaitingForBets()){
+        if (!gs.isWaitingForBets()) {
+            setActivePlayerLabel(gs.getActivePlayer());
+            betButtonsDisabled();
             updateUserCards(gs);
             updateDealerCards(gs);
-            if(gs.getActivePlayer() == ID){
+            if (gs.getActivePlayer() == ID) {
+                gameInfoLabel.setText("Choose Hit or Stick");
                 hitButton.setEnabled(true);
                 stickButton.setEnabled(true);
+            }else{
+                gameInfoLabel.setText("Waiting for other Players");
             }
         }
     }
 
-    public void updateUserCards(GameStats gs){
+    public void setActivePlayerLabel(int id) {
+        String player = "" + id;
+        if (id == this.ID) {
+            player = "You";
+        }
+        if (id == 0) {
+            player = "Dealer";
+        }
+        activePlayerLabel.setText(player);
+    }
+
+    public void updateUserCards(GameStats gs) {
         ArrayList<Card> uCards = gs.get(ID);
-        for(int i = 0; i < uCards.size(); i++){
+        for (int i = 0; i < uCards.size(); i++) {
             userCards[i].removeAll();
             /**
              * removes all components currently addded to stop doubling up of cards
@@ -143,50 +160,52 @@ public class SwingGameClient extends JFrame implements ActionListener {
         }
     }
 
-    
+    public void betButtonsDisabled() {
+        dealButton.setEnabled(false);
+        bet10Button.setEnabled(false);
+        bet20Button.setEnabled(false);
+        bet50Button.setEnabled(false);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == dealButton){
+        if (e.getSource() == dealButton) {
             try {
                 outputStream.writeObject(new Bet(ID, currentBet));
             } catch (IOException e1) {
                 e1.printStackTrace();
-            }finally{
-                dealButton.setEnabled(false);
-                bet10Button.setEnabled(false);
-                bet20Button.setEnabled(false);
-                bet50Button.setEnabled(false);
+            } finally {
+                betButtonsDisabled();
                 currentBetLabel.setText("");
             }
         }
-        if(e.getSource() == hitButton){
+        if (e.getSource() == hitButton) {
             try {
                 outputStream.writeObject(new StickOrHit(this.ID, 1));
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
         }
-        if(e.getSource() == stickButton){
+        if (e.getSource() == stickButton) {
             try {
                 outputStream.writeObject(new StickOrHit(this.ID, -1));
                 stickButton.setEnabled(false);
                 hitButton.setEnabled(false);
             } catch (IOException e1) {
                 e1.printStackTrace();
-            }  
+            }
         }
-        if(e.getSource() == bet10Button){
+        if (e.getSource() == bet10Button) {
             currentBet += 10;
             currentBetLabel.setText("" + currentBet);
             dealButton.setEnabled(true);
         }
-        if(e.getSource() == bet20Button){
+        if (e.getSource() == bet20Button) {
             currentBet += 20;
             currentBetLabel.setText("" + currentBet);
             dealButton.setEnabled(true);
         }
-        if(e.getSource() == bet50Button){
+        if (e.getSource() == bet50Button) {
             currentBet += 50;
             currentBetLabel.setText("" + currentBet);
             dealButton.setEnabled(true);
@@ -194,20 +213,16 @@ public class SwingGameClient extends JFrame implements ActionListener {
 
     }
 
-
-
-
-
-
     public void initializeComponents() {
         currentBet = 0;
         userCards = main.getUserCardPanels();
         dealerCards = main.getDealerCardPanels();
-
+        activePlayerLabel = main.getActivePlayer();
         dealerScoreLabel = main.getDealerScoreLabel();
         userScoreLabel = main.getUserCurrentScoreLabel();
         currentBalanceLabel = main.getCurrentBalanceLabel();
         currentBetLabel = main.getCurrentBetLabel();
+        gameInfoLabel = main.getGameInfoLabel();
         noPlayers = main.getNoPlayersLabel();
         dealButton = main.getDealButton();
         dealButton.addActionListener(this);
@@ -222,7 +237,6 @@ public class SwingGameClient extends JFrame implements ActionListener {
         bet50Button = main.getFiftyButton();
         bet50Button.addActionListener(this);
     }
-
 
     public static void main(String[] args) {
         new SwingGameClient();

@@ -21,6 +21,9 @@ public class Player extends ArrayList<Card>{
         this.clear();
         return currentHand;
     }
+    public boolean isBust(){
+        return getCurrentScore() > 21;
+    }
 
     public int getCurrentScore(){
         int currentScore = 0;

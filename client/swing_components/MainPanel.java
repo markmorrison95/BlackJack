@@ -1,6 +1,8 @@
 package client.swing_components;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import java.awt.*;
 
 /**
@@ -12,6 +14,7 @@ public class MainPanel extends JPanel {
     BettingPanel bettingPanel;
     ClientCardPanel playerCards;
     JLabel gameInfoLabel;
+    JLabel activePlayer;
 
     public MainPanel() {
         Color darkGreen = new Color(0, 102, 0);
@@ -20,11 +23,30 @@ public class MainPanel extends JPanel {
         dealer = new DealerPanel();
 
         gameInfo = new JPanel();
+        gameInfo.setBorder(new EmptyBorder(10, 10, 10, 10));
         gameInfo.setBackground(darkGreen);
-        gameInfo.setLayout(new GridLayout());
-        gameInfoLabel = new JLabel("Game Info", SwingConstants.CENTER);
-        gameInfoLabel.setFont(new Font("Serif", Font.BOLD, 35));
+        gameInfoLabel = new JLabel("Place Bet and CLick Deal to Start Once Players have Joined");
+        gameInfoLabel.setFont(new Font("Serif", Font.BOLD, 14));
         gameInfoLabel.setForeground(Color.yellow);
+        JPanel activePlayerPanel = new JPanel();
+        activePlayerPanel.setLayout(new GridLayout(2, 1));
+        activePlayerPanel.setBackground(darkGreen);
+        JLabel activePlayerConstant = new JLabel("Active Player:", SwingConstants.LEFT);        
+        activePlayerConstant.setFont(new Font("Serif", Font.BOLD, 14));
+        activePlayerConstant.setForeground(Color.yellow);
+
+        activePlayer = new JLabel("", SwingConstants.LEFT);
+        activePlayer.setFont(new Font("Serif", Font.BOLD, 14));
+        activePlayer.setForeground(Color.yellow);
+        activePlayerPanel.add(activePlayerConstant);
+        activePlayerPanel.add(activePlayer);
+
+        JPanel blank = new JPanel();
+        blank.setBorder(new EmptyBorder(20, 20, 20, 20));
+        blank.setBackground(darkGreen);
+        
+        gameInfo.add(activePlayerPanel);
+        gameInfo.add(blank);
         gameInfo.add(gameInfoLabel);
 
 
@@ -37,6 +59,10 @@ public class MainPanel extends JPanel {
         this.add(playerCards);
         this.add(bettingPanel);
     }
+    public JLabel getActivePlayer(){
+        return this.activePlayer;
+    }
+
     public JButton getUserHitButton(){
         return playerCards.getHitButton();
     }
