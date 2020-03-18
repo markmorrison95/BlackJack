@@ -18,21 +18,5 @@ public enum Suit {
         return suitValue;
  
     }
-    public String getSuitString(){
-        if(this.suitValue == 1){
-            return "Spades";
-        }
-        if(this.suitValue == 2){
-            return "Clubs";
-        }
-        if(this.suitValue == 3){
-            return "Diamonds";
-        }
-        if(this.suitValue == 4){
-            return "Hearts";
-        }
-        else return null;
-        
-    }
 
 }

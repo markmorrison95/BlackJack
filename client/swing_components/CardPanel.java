@@ -1,7 +1,7 @@
 package client.swing_components;
 
 import javax.swing.*;
-
+import javax.swing.border.EmptyBorder;
 
 import model.enums.*;
 
@@ -19,6 +19,8 @@ public class CardPanel extends JPanel {
 
     public CardPanel(){
         this.setLayout(new GridLayout());
+        ImagePanel back = new ImagePanel();
+        this.add(back);
     }
 
     public CardPanel(CardValue cv, Suit s) {
@@ -33,10 +35,12 @@ public class CardPanel extends JPanel {
         ImagePanel iTop = new ImagePanel(s);
         JPanel numberPanelTop = new JPanel();
         JLabel numberLabelTop = new JLabel(cv.toString());
+        numberLabelTop.setFont(new Font("Serif", Font.BOLD, 12));
         numberPanelTop.add(numberLabelTop);
         ImagePanel ipBottom = new ImagePanel(s);
         JPanel numberPanelBottom = new JPanel();
         JLabel numberLabelBottom = new JLabel(cv.toString());
+        numberLabelBottom.setFont(new Font("Serif", Font.BOLD, 12));
         numberPanelBottom.add(numberLabelBottom);
         top.add(iTop);
         top.add(numberPanelTop);
@@ -54,6 +58,17 @@ public class CardPanel extends JPanel {
 
         private BufferedImage image;
         private String imagePath;
+        public ImagePanel() {
+            this.setBorder(new EmptyBorder(10, 10, 10, 10));
+           try {                
+              image = ImageIO.read(new File("images/cardback.png"));
+           } catch (IOException ex) {
+                ex.printStackTrace();
+           }
+        }
+
+
+
         public ImagePanel(Suit suit) {
             if(suit.SuitValue() == 1){
                     imagePath = "images/spades.png";
@@ -77,7 +92,7 @@ public class CardPanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.drawImage(image, 0, 0, this);          
+            g.drawImage(image,  0, 0, getWidth(), getHeight(), this);         
         }
     
     }

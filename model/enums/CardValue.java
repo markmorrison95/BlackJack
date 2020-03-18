@@ -15,7 +15,19 @@ package model.enums;
 	 
 		}
 		public String toString(){
-			return "" + rankValue;
+			if(this.equals(ACE)){
+				return "A";
+			}
+			if(this.equals(KING)){
+				return "K";
+			}
+			if(this.equals(QUEEN)){
+				return "Q";
+			}
+			if(this.equals(JACK)){
+				return "J";
+			}
+			else return "" + rankValue;
 		}
  
     }

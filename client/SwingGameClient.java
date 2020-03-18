@@ -105,9 +105,10 @@ public class SwingGameClient extends JFrame implements ActionListener {
              * removes all components currently addded to stop doubling up of cards
              */
             userCards[i].add(new CardPanel(uCards.get(i).getCardRank(), uCards.get(i).getCardSuit()));
-            userCards[i].repaint();
-            this.repaint();
+            userCards[i].setVisible(true);
         }
+        userCards[2].add(new CardPanel());
+        userCards[2].setVisible(true);
     }
 
     
