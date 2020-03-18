@@ -6,8 +6,10 @@ import java.util.ArrayList;
  */
 public class Player extends ArrayList<Card>{
     private int ID;
-    public Player(int ID){
+    private int money;
+    public Player(int ID, int money){
         this.ID = ID;
+        this.money = money;
     }
 
     public int getID(){
@@ -26,6 +28,18 @@ public class Player extends ArrayList<Card>{
             currentScore += c.getCardRank().cardValue();
         }
         return currentScore;
+    }
+    public int getBalance(){
+        return this.money;
+    }
+    
+    public int removeMoney(int amount){
+        money -= amount;
+        return amount;
+    }
+
+    public void addMoney(int amount){
+        money += amount;
     }
     
 }

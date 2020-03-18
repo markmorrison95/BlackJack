@@ -35,12 +35,16 @@ public class ClientRunner implements Runnable {
                 Bet bet = (Bet) inputStream.readObject();
                 parent.makeBet(bet);
                 StickOrHit stickOrHit = null;
-                while ((stickOrHit = (StickOrHit) inputStream.readObject()) != null) {
+                boolean stick = false;
+                while (!stick) {
+                    stickOrHit = (StickOrHit)inputStream.readObject();
                     if (stickOrHit.getOperation() == 1) {
                         parent.hitCards(stickOrHit);
-                    } else {
+                        continue;
+                    } if(stickOrHit.getOperation() == -1){
                         parent.stickCards(stickOrHit);
-                        break;
+                        stick = true;
+
                     }
                 }
             }
@@ -55,7 +59,6 @@ public class ClientRunner implements Runnable {
     public void transmitGameStats(GameStats gs) {
         // transmit game stats to client connected to this thread
         try {
-            System.out.println(gs.get(1).size());
             outputStream.writeUnshared(gs);
             outputStream.reset();
         }catch(IOException e){

@@ -1,9 +1,11 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * StickOrHit
  */
-    public class StickOrHit {
+    public class StickOrHit implements Serializable {
     private int ID;
     private int operation;
 

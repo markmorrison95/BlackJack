@@ -38,7 +38,7 @@ public class BettingPanel extends JPanel {
         currentScoreConstant.setForeground(Color.yellow);
         currentScoreConstant.setBackground(darkGreen);
 
-        currentScore = new JLabel("10");
+        currentScore = new JLabel("");
         currentScore.setFont(new Font("Serif", Font.BOLD, 18));
         currentScore.setForeground(Color.yellow);
         currentScore.setBackground(darkGreen);
@@ -51,7 +51,7 @@ public class BettingPanel extends JPanel {
         currentBalanceConstant.setForeground(Color.yellow);
         currentBalanceConstant.setBackground(darkGreen);
 
-        currentBalance = new JLabel("10");
+        currentBalance = new JLabel("");
         currentBalance.setFont(new Font("Serif", Font.BOLD, 18));
         currentBalance.setBackground(darkGreen);
         currentBalance.setForeground(Color.yellow);

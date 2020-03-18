@@ -61,13 +61,33 @@ public class Controller {
             refillDeck();
         }
         gameStats.get(s.getID()).add(mainDeck.getAndRemoveCard());
+        gameServer.transmitStatsToAll();
     }
-    public void stickCards(StickOrHit s){
 
+
+    public void stickCards(StickOrHit s){
+        if(gameStats.getActivePlayer() == (gameStats.getRoundSize() -1)){
+        dealerRound();
+        }else{
+        gameStats.increaseActivePlayer();
+        gameServer.transmitStatsToAll();
+        }
     }
 
     public void addUser(int ID) {
         gameStats.addPlayer(new User(ID));
+    }
+
+    public void dealerRound(){
+        gameStats.setDealerActivePlayer();
+        Player dealer = gameStats.get(0);
+        while(dealer.getCurrentScore() < 18){
+            if(mainDeck.refillTime()){
+                refillDeck();
+            }
+            dealer.add(mainDeck.getAndRemoveCard());
+            gameServer.transmitStatsToAll();
+        }
     }
 
     public void dealCards(){

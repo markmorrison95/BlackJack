@@ -11,6 +11,7 @@ import javax.swing.*;
 import model.Bet;
 import model.Card;
 import model.GameStats;
+import model.StickOrHit;
 import client.swing_components.*;
 
 import java.awt.event.ActionEvent;
@@ -42,9 +43,7 @@ public class SwingGameClient extends JFrame implements ActionListener {
                 while((gs = (GameStats)inputStream.readUnshared()) != null){
                 // what to do with input ie. game stats
                 /******************************************************** */
-                System.out.println(gs.get(ID).size());
                 parent.updateGameInfo(gs);
-
                 }
 
             } catch (ClassNotFoundException e) {
@@ -97,10 +96,14 @@ public class SwingGameClient extends JFrame implements ActionListener {
 
     public void updateGameInfo(GameStats gs) {
         noPlayers.setText("" + (gs.size() -1));
+        currentBalanceLabel.setText("" + gs.get(ID).getBalance());
         if(!gs.isWaitingForBets()){
-            System.out.println(gs.get(1).get(0));
             updateUserCards(gs);
             updateDealerCards(gs);
+            if(gs.getActivePlayer() == ID){
+                hitButton.setEnabled(true);
+                stickButton.setEnabled(true);
+            }
         }
     }
 
@@ -114,6 +117,7 @@ public class SwingGameClient extends JFrame implements ActionListener {
             userCards[i].add(new CardPanel(uCards.get(i).getCardRank(), uCards.get(i).getCardSuit()));
             userCards[i].setVisible(true);
         }
+        userScoreLabel.setText("" + gs.get(ID).getCurrentScore());
     }
 
     public void updateDealerCards(GameStats gs) {
@@ -127,7 +131,9 @@ public class SwingGameClient extends JFrame implements ActionListener {
                 dealerCards[i].add(new CardPanel(dCards.get(i).getCardRank(), dCards.get(i).getCardSuit()));
                 dealerCards[i].setVisible(true);
             }
+            dealerScoreLabel.setText("" + gs.get(0).getCurrentScore());
         } else {
+            dealerScoreLabel.setText("" + dCards.get(1).getCardRank().cardValue());
             dealerCards[0].removeAll();
             dealerCards[0].add(new CardPanel());
             dealerCards[0].setVisible(true);
@@ -148,13 +154,27 @@ public class SwingGameClient extends JFrame implements ActionListener {
                 e1.printStackTrace();
             }finally{
                 dealButton.setEnabled(false);
+                bet10Button.setEnabled(false);
+                bet20Button.setEnabled(false);
+                bet50Button.setEnabled(false);
+                currentBetLabel.setText("");
             }
         }
         if(e.getSource() == hitButton){
-            
+            try {
+                outputStream.writeObject(new StickOrHit(this.ID, 1));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
         if(e.getSource() == stickButton){
-            
+            try {
+                outputStream.writeObject(new StickOrHit(this.ID, -1));
+                stickButton.setEnabled(false);
+                hitButton.setEnabled(false);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }  
         }
         if(e.getSource() == bet10Button){
             currentBet += 10;
@@ -186,6 +206,7 @@ public class SwingGameClient extends JFrame implements ActionListener {
 
         dealerScoreLabel = main.getDealerScoreLabel();
         userScoreLabel = main.getUserCurrentScoreLabel();
+        currentBalanceLabel = main.getCurrentBalanceLabel();
         currentBetLabel = main.getCurrentBetLabel();
         noPlayers = main.getNoPlayersLabel();
         dealButton = main.getDealButton();

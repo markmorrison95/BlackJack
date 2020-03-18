@@ -53,10 +53,10 @@ public class GameServer implements Runnable {
         }
     }
     public void hitCards(StickOrHit stickOrHit){
-
+        controller.hitCards(stickOrHit);
     }
     public void stickCards(StickOrHit stickOrHit){
-        
+        controller.stickCards(stickOrHit); 
     }
 
     public void makeBet(Bet bet){

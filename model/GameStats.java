@@ -1,6 +1,5 @@
 package model;
 
-import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -26,12 +25,20 @@ public class GameStats extends HashMap<Integer, Player>{
     public boolean isWaitingForBets(){
         return waitingForBets;
     }
-
+    public int getActivePlayer(){
+        return this.activePlayer;
+    }
     public void setActivePlayer(int id){
         activePlayer = id;
     }
-    public int getActivePlayer(){
-        return this.activePlayer;
+    public void increaseActivePlayer(){
+        this.activePlayer++;
+    }
+    public void setDealerActivePlayer(){
+        activePlayer = 0;
+    }
+    public void resetActivePlayer(){
+        this.activePlayer = 1;
     }
     public int getNoCardsInDeck(){
         /**

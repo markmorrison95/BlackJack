@@ -60,7 +60,7 @@ public class DealerPanel extends JPanel{
         JLabel dealerConstant = new JLabel("Dealer\nScore:", SwingConstants.CENTER);
         dealerConstant.setFont(new Font("Serif", Font.BOLD, 12));
         dealerConstant.setForeground(Color.yellow);
-        dealerScore = new JLabel("11", SwingConstants.CENTER);
+        dealerScore = new JLabel("", SwingConstants.CENTER);
         dealerScore.setFont(new Font("Serif", Font.BOLD, 20));
         dealerScore.setForeground(Color.yellow);
         dealerInfo.add(dealerConstant);
