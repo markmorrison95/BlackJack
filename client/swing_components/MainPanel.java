@@ -1,4 +1,4 @@
-package swing_components;
+package client.swing_components;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +10,7 @@ public class MainPanel extends JPanel {
     DealerPanel dealer;
     JPanel gameInfo;
     BettingPanel bettingPanel;
-    CardPanel playerCards;
+    ClientCardPanel playerCards;
     JLabel gameInfoLabel;
 
     public MainPanel() {
@@ -28,7 +28,7 @@ public class MainPanel extends JPanel {
         gameInfo.add(gameInfoLabel);
 
 
-        playerCards = new CardPanel();
+        playerCards = new ClientCardPanel();
         bettingPanel = new BettingPanel();
 
 
@@ -37,42 +37,11 @@ public class MainPanel extends JPanel {
         this.add(playerCards);
         this.add(bettingPanel);
     }
-
-    public JPanel getUserCardOne(){
-        return playerCards.getCardOne();
-    }
-    public JPanel getUserCardTwo(){
-        return playerCards.getCardTwo();
-    }
-    public JPanel getUserCardThree(){
-        return playerCards.getCardThree();
-    }
-    public JPanel getUserCardFour(){
-        return playerCards.getCardFour();
-    }
-    public JPanel getUserCardFive(){
-        return playerCards.getCardFive();
-    }
     public JButton getUserHitButton(){
         return playerCards.getHitButton();
     }
     public JButton getUserStickButton(){
         return playerCards.getStickButton();   
-    }
-    public JPanel getDealerCardOne(){
-        return dealer.getCardOne();
-    }
-    public JPanel getDealerCardTwo(){
-        return dealer.getCardTwo();
-    }
-    public JPanel getDealerCardThree(){
-        return dealer.getCardThree();
-    }
-    public JPanel getDealerCardFour(){
-        return dealer.getCardFour();
-    }
-    public JPanel getDealerCardFive(){
-        return dealer.getCardFive();
     }
     public JLabel getDealerScoreLabel(){
         return dealer.getDealerScoreLabel();
@@ -99,15 +68,13 @@ public class MainPanel extends JPanel {
         return bettingPanel.getCurrentScoreLabel();
     }
 
-
-
     public JPanel[] getUserCardPanels(){
-        JPanel[] pcards = new JPanel[5];
-        pcards[0] = playerCards.getCardOne();
-        pcards[1] = playerCards.getCardTwo();
-        pcards[2] = playerCards.getCardThree();
-        pcards[3] = playerCards.getCardFour();
-        pcards[4] = playerCards.getCardFive();
-        return pcards;
+        return playerCards.getUserCardPanels();
     }
+
+    public JPanel[] getDealerCardPanels(){
+        return dealer.getDealerCardPanels();
+    }
+
+
 }

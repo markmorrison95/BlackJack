@@ -1,4 +1,4 @@
-package swing_components;
+package client.swing_components;
 
 import java.awt.Color;
 
@@ -10,11 +10,11 @@ import java.awt.GridLayout;
 /**
  * CardPanel
  */
-public class CardPanel extends JPanel {
+public class ClientCardPanel extends JPanel {
     private JPanel cardOne, cardTwo, cardThree, cardFour, cardFive;
     private JButton hit, stick;
 
-    public CardPanel(){
+    public ClientCardPanel(){
         this.setBackground(new Color(0, 102, 0));
         this.setBorder(new EmptyBorder(0, 30, 0, 30));
         GridLayout layout = new GridLayout(1,6);
@@ -25,9 +25,13 @@ public class CardPanel extends JPanel {
         cardOne = new JPanel();
         cardOne.setLayout(new GridLayout());
         cardTwo = new JPanel();
+        cardTwo.setLayout(new GridLayout());
         cardThree = new JPanel();
+        cardThree.setLayout(new GridLayout());
         cardFour = new JPanel();
+        cardFour.setLayout(new GridLayout());
         cardFive = new JPanel();
+        cardFive.setLayout(new GridLayout());
         this.add(hit);
         this.add(cardOne);
         this.add(cardTwo);
@@ -37,25 +41,21 @@ public class CardPanel extends JPanel {
         this.add(stick);
         
     }
-    public JPanel getCardOne(){
-        return this.cardOne;
-    }
-    public JPanel getCardTwo(){
-        return this.cardTwo;
-    }
-    public JPanel getCardThree(){
-        return this.cardThree;
-    }
-    public JPanel getCardFour(){
-        return this.cardFour;
-    }
-    public JPanel getCardFive(){
-        return this.cardFive;
-    }
-    public JButton getHitButton(){
+    public JButton getHitButton() {
         return this.hit;
     }
+
     public JButton getStickButton(){
         return this.stick;
+    }
+
+    public JPanel[] getUserCardPanels(){
+        JPanel[] pCards = new JPanel[5];
+        pCards[0] = cardOne;
+        pCards[1] = cardTwo;
+        pCards[2] = cardThree;
+        pCards[3] = cardFour;
+        pCards[4] = cardFive;
+        return pCards;
     }
 }

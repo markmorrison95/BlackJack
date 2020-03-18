@@ -1,4 +1,4 @@
-package swing_components;
+package client.swing_components;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -48,21 +48,16 @@ public class DealerPanel extends JPanel{
         this.add(dealerInfo);
     }
 
-    public JPanel getCardOne(){
-        return this.cardOne;
+    public JPanel[] getDealerCardPanels(){
+        JPanel[] dCards = new JPanel[5];
+        dCards[0] = this.cardOne;
+        dCards[1] = this.cardTwo;
+        dCards[2] = this.cardThree;
+        dCards[3] = this.cardFour;
+        dCards[4] = this.cardFive;
+        return dCards;
     }
-    public JPanel getCardTwo(){
-        return this.cardTwo;
-    }
-    public JPanel getCardThree(){
-        return this.cardThree;
-    }
-    public JPanel getCardFour(){
-        return this.cardFour;
-    }
-    public JPanel getCardFive(){
-        return this.cardFive;
-    }
+
     public JLabel getDealerScoreLabel(){
         return this.dealerScore;
     }

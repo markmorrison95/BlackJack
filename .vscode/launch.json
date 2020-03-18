@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - CardCreator",
+            "request": "launch",
+            "mainClass": "client.swing_components.CardCreator",
+            "projectName": "BlackJack_f0f2120c"
+        },
+        {
+            "type": "java",
             "name": "Debug (Launch) - Current File",
             "request": "launch",
             "mainClass": "${file}"

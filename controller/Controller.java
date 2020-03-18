@@ -7,7 +7,7 @@ import java.util.Scanner;
 import java.util.Map.Entry;
 
 import model.*;
-import model.enums.CardRank;
+import model.enums.CardValue;
 import model.enums.Suit;
 import server.GameServer;
 
@@ -116,7 +116,7 @@ public class Controller {
             String suit = scanner.next();
             String value = scanner.next();
             if(scanner.hasNextLine()) {scanner.nextLine();}
-			mainDeck.addCard(new Card(Suit.valueOf(suit), CardRank.valueOf(value)));
+			mainDeck.addCard(new Card(Suit.valueOf(suit), CardValue.valueOf(value)));
 		}
 		scanner.close();
     }

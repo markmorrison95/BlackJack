@@ -8,9 +8,9 @@ import model.enums.*;
  * Card
  */
 public class Card implements Comparable<Card>, Serializable{
-    private CardRank rank;
+    private CardValue rank;
     private Suit suit;
-    public Card(Suit suit, CardRank rank){
+    public Card(Suit suit, CardValue rank){
         this.suit = suit;
         this.rank = rank;
     }
@@ -20,7 +20,7 @@ public class Card implements Comparable<Card>, Serializable{
         return this.rank.cardValue().compareTo(o.rank.cardValue());
     }
 
-    public CardRank getCardRank(){
+    public CardValue getCardRank(){
         return this.rank;
     }
     public Suit getCardSuit(){

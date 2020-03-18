@@ -1,4 +1,4 @@
-package swing_components;
+package client.swing_components;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;

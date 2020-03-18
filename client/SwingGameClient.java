@@ -10,7 +10,7 @@ import javax.swing.*;
 
 import model.Card;
 import model.GameStats;
-import swing_components.*;
+import client.swing_components.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,13 +37,12 @@ public class SwingGameClient extends JFrame implements ActionListener {
 
         public Void doInBackground() {
             GameStats gs = null;
-            int i = -1;
             try {
-                gs = (GameStats)inputStream.readObject();
+                while((gs = (GameStats)inputStream.readObject()) != null){
                 // what to do with input ie. game stats
                 /******************************************************** */
-                System.out.println(gs.getPlayerMap().get(ID).get(0));
                 parent.updateUserCards(gs);
+                }
 
             // } catch (ClassNotFoundException e) {
             //     e.printStackTrace();
@@ -59,9 +58,7 @@ public class SwingGameClient extends JFrame implements ActionListener {
     private ObjectOutputStream outputStream;
     private int ID;
     private MainPanel main;
-    // private JPanel userCardOne, userCardTwo, userCardThree, userCardFour, userCardFive;
-    private JPanel[] userCards;
-    private JPanel dealerCardOne, dealerCardTwo, dealerCardThree, dealerCardFour, dealerCardFive;
+    private JPanel[] userCards, dealerCards;
     private JButton hitButton, stickButton, bet50Button, bet20Button, bet10Button;
     private JLabel dealerScoreLabel, currentBalanceLabel, currentBetLabel, gameInfoLabel, userScoreLabel;
 
@@ -103,10 +100,13 @@ public class SwingGameClient extends JFrame implements ActionListener {
     public void updateUserCards(GameStats gs){
         ArrayList<Card> uCards = gs.getPlayerMap().get(ID);
         for(int i = 0; i < uCards.size(); i++){
-            /*************************************************************************
-             * adds card to string to new jpanel on user cards 
+            userCards[i].removeAll();
+            /**
+             * removes all components currently addded to stop doubling up of cards
              */
-            userCards[i].add(new JLabel(uCards.get(i).toString()));
+            userCards[i].add(new CardPanel(uCards.get(i).getCardRank(), uCards.get(i).getCardSuit()));
+            userCards[i].repaint();
+            this.repaint();
         }
     }
 
@@ -124,18 +124,8 @@ public class SwingGameClient extends JFrame implements ActionListener {
 
 
     public void initializeComponents() {
-        // userCardOne = main.getUserCardOne();
-        // userCardTwo = main.getUserCardTwo();
-        // userCardThree = main.getUserCardThree();
-        // userCardFour = main.getUserCardFour();
-        // userCardFive = main.getUserCardFive();
         userCards = main.getUserCardPanels();
-
-        dealerCardOne = main.getDealerCardOne();
-        dealerCardTwo = main.getDealerCardTwo();
-        dealerCardThree = main.getDealerCardThree();
-        dealerCardFour = main.getDealerCardFour();
-        dealerCardFive = main.getDealerCardFive();
+        dealerCards = main.getDealerCardPanels();
 
         dealerScoreLabel = main.getDealerScoreLabel();
         userScoreLabel = main.getUserCurrentScoreLabel();
