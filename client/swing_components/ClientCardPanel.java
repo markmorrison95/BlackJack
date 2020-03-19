@@ -11,13 +11,13 @@ import java.awt.GridLayout;
  * CardPanel
  */
 public class ClientCardPanel extends JPanel {
-    private JPanel cardOne, cardTwo, cardThree, cardFour, cardFive;
+    private JPanel cardOne, cardTwo, cardThree, cardFour, cardFive, cardSix, cardSeven;
     private JButton hit, stick;
 
     public ClientCardPanel(){
         this.setBackground(new Color(0, 102, 0));
         this.setBorder(new EmptyBorder(0, 30, 0, 30));
-        GridLayout layout = new GridLayout(1,6);
+        GridLayout layout = new GridLayout(1,9);
         layout.setHgap(25);
         this.setLayout(layout);
         hit = new JButton("Hit");
@@ -39,12 +39,20 @@ public class ClientCardPanel extends JPanel {
         cardFive = new JPanel();
         cardFive.setLayout(new GridLayout());
         cardFive.setVisible(false);
+        cardSix = new JPanel();
+        cardSix.setLayout(new GridLayout());
+        cardSix.setVisible(false);
+        cardSeven = new JPanel();
+        cardSeven.setLayout(new GridLayout());
+        cardSeven.setVisible(false);
         this.add(hit);
         this.add(cardOne);
         this.add(cardTwo);
         this.add(cardThree);
         this.add(cardFour); 
         this.add(cardFive);
+        this.add(cardSix);
+        this.add(cardSeven);
         this.add(stick);
         
     }
@@ -57,12 +65,14 @@ public class ClientCardPanel extends JPanel {
     }
 
     public JPanel[] getUserCardPanels(){
-        JPanel[] pCards = new JPanel[5];
-        pCards[0] = cardOne;
-        pCards[1] = cardTwo;
-        pCards[2] = cardThree;
-        pCards[3] = cardFour;
-        pCards[4] = cardFive;
+        JPanel[] pCards = new JPanel[7];
+        pCards[0] = this.cardOne;
+        pCards[1] = this.cardTwo;
+        pCards[2] = this.cardThree;
+        pCards[3] = this.cardFour;
+        pCards[4] = this.cardFive;
+        pCards[5] = this.cardSix;
+        pCards[6] = this.cardSeven;
         return pCards;
     }
 }

@@ -75,6 +75,7 @@ public class SwingGameClient extends JFrame implements ActionListener {
         this.setVisible(true);
         initializeComponents();
         connect();
+        this.setTitle("Blackjack - Player " + ID);
         try {
             outputStream = new ObjectOutputStream(server.getOutputStream());
         } catch (IOException e) {
@@ -99,27 +100,28 @@ public class SwingGameClient extends JFrame implements ActionListener {
         noPlayers.setText("" + (gs.size() - 1));
         currentBalanceLabel.setText("" + gs.get(ID).getBalance());
         if (!gs.isWaitingForBets()) {
-            setActivePlayerLabel(gs.getActivePlayer());
-            betButtonsDisabled();
+            int activePlayer = gs.getActivePlayer();
+            setActivePlayerLabel(activePlayer);
+            betButtonsEnabled(false);
             updateUserCards(gs);
             updateDealerCards(gs);
-            if (gs.getActivePlayer() == ID && !(gs.get(ID).isBust())) {
+            if ((activePlayer == ID) && !(gs.get(ID).isBust())) {
                 gameInfoLabel.setText("Choose Hit or Stick");
                 hitButton.setEnabled(true);
                 stickButton.setEnabled(true);
-            }if (gs.getActivePlayer() == ID && gs.get(ID).isBust()) {
+            }else if ((activePlayer == ID) && gs.get(ID).isBust()) {
                 gameInfoLabel.setText("BUST!");
                 hitButton.setEnabled(false);
                 stickButton.setEnabled(false);
-                try {
-                    outputStream.writeObject(new StickOrHit(this.ID, -1));
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                sendStickOrHit(-1);
             }
             else{
-                gameInfoLabel.setText("Waiting for other Players");
+                gameInfoLabel.setText("Waiting for Player" + activePlayer + " to Play Round");
             }
+        }else{
+            removeCards();
+            betButtonsEnabled(true);
+            gameInfoLabel.setText("Place Bet and Click Deal to Start");
         }
     }
 
@@ -132,6 +134,15 @@ public class SwingGameClient extends JFrame implements ActionListener {
             player = "Dealer";
         }
         activePlayerLabel.setText(player);
+    }
+
+    public void removeCards(){
+        for(int i = 0; i < userCards.length; i++){
+            userCards[i].removeAll();
+            userCards[i].setVisible(false);
+            dealerCards[i].removeAll();
+            dealerCards[i].setVisible(false);
+        }
     }
 
     public void updateUserCards(GameStats gs) {
@@ -170,11 +181,19 @@ public class SwingGameClient extends JFrame implements ActionListener {
         }
     }
 
-    public void betButtonsDisabled() {
-        dealButton.setEnabled(false);
-        bet10Button.setEnabled(false);
-        bet20Button.setEnabled(false);
-        bet50Button.setEnabled(false);
+    public void betButtonsEnabled(boolean b) {
+        bet10Button.setEnabled(b);
+        bet20Button.setEnabled(b);
+        bet50Button.setEnabled(b);
+    }
+
+        public void sendStickOrHit(int operation){
+        try {
+            outputStream.writeObject(new StickOrHit(this.ID, operation));
+            outputStream.reset();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
     }
 
     @Override
@@ -182,28 +201,24 @@ public class SwingGameClient extends JFrame implements ActionListener {
         if (e.getSource() == dealButton) {
             try {
                 outputStream.writeObject(new Bet(ID, currentBet));
+                outputStream.reset();
             } catch (IOException e1) {
                 e1.printStackTrace();
             } finally {
-                betButtonsDisabled();
-                currentBetLabel.setText("");
+                betButtonsEnabled(false);
+                dealButton.setEnabled(false);
+                currentBet = 0;
+                currentBetLabel.setText("" + currentBet);
+                gameInfoLabel.setText("Waiting for other Players to Place Bets");
             }
         }
         if (e.getSource() == hitButton) {
-            try {
-                outputStream.writeObject(new StickOrHit(this.ID, 1));
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+            sendStickOrHit(1);
         }
         if (e.getSource() == stickButton) {
-            try {
-                outputStream.writeObject(new StickOrHit(this.ID, -1));
-                stickButton.setEnabled(false);
-                hitButton.setEnabled(false);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+            sendStickOrHit(-1);
+            stickButton.setEnabled(false);
+            hitButton.setEnabled(false);
         }
         if (e.getSource() == bet10Button) {
             currentBet += 10;

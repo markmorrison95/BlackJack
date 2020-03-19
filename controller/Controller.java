@@ -24,6 +24,7 @@ public class Controller {
 
     public Controller() {
         mainDeck = new Deck();
+        usedDeck = new Deck();
         gameStats = new GameStats(mainDeck);
         readInCards();
         mainDeck.shuffleDeck();
@@ -34,43 +35,36 @@ public class Controller {
         t.start();
         try {
             t.join();
-        }catch(InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    public void hitCards(int ID){
-        if(mainDeck.refillTime()){
-            refillDeck();
-        }
-        gameStats.get(ID).add(mainDeck.getAndRemoveCard());
-    }
-
-    public void placeBet(Bet bet){
-        User u = (User)gameStats.get(bet.getPlayerId());
+    public void placeBet(Bet bet) {
+        User u = (User) gameStats.get(bet.getPlayerId());
         bank.addMoney(u.removeMoney(bet.getBetAmount()));
-        if(bank.getNoBets() == (gameStats.size() - 1)){
+        if (bank.getNoBets() == (gameStats.size() - 1)) {
             bank.resetNoBets();
             gameStats.allBetsRecieved();
             dealCards();
         }
 
     }
-    public void hitCards(StickOrHit s){
-        if(mainDeck.refillTime()){
+
+    public void hitCards(StickOrHit s) {
+        if (mainDeck.refillTime()) {
             refillDeck();
         }
         gameStats.get(s.getID()).add(mainDeck.getAndRemoveCard());
         gameServer.transmitStatsToAll();
     }
 
-
-    public void stickCards(StickOrHit s){
-        if(gameStats.getActivePlayer() == (gameStats.getRoundSize() -1)){
-        dealerRound();
-        }else{
-        gameStats.increaseActivePlayer();
-        gameServer.transmitStatsToAll();
+    public void stickCards() {
+        if (gameStats.getActivePlayer() == (gameStats.getRoundSize() - 1)) {
+            dealerRound();
+        } else {
+            gameStats.increaseActivePlayer();
+            gameServer.transmitStatsToAll();
         }
     }
 
@@ -78,14 +72,35 @@ public class Controller {
         gameStats.addPlayer(new User(ID));
     }
 
-    public void dealerRound(){
+    public void dealerRound() {
         gameStats.setDealerActivePlayer();
         Player dealer = gameStats.get(0);
-        while(dealer.getCurrentScore() < 18){
-            if(mainDeck.refillTime()){
+        while (dealer.getCurrentScore() < 18) {
+            if (mainDeck.refillTime()) {
                 refillDeck();
             }
             dealer.add(mainDeck.getAndRemoveCard());
+            gameServer.transmitStatsToAll();
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        gameServer.transmitStatsToAll();
+        nextRound();
+
+    }
+
+    public void nextRound() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally{
+            gameStats.resetBettingRound();
+            gameStats.increaseActivePlayer();
+            removeAllPlayersHands();
             gameServer.transmitStatsToAll();
         }
     }
@@ -108,8 +123,8 @@ public class Controller {
     }
 
     public void removeAllPlayersHands(){
-            for(Entry<Integer, Player> player : gameStats.entrySet()) {
-                usedDeck.addAll(player.getValue().getAndRemoveAllCards());
+            for(Player player : gameStats.values()) {
+                usedDeck.addAll(player.getAndRemoveAllCards());
             }
     }
 

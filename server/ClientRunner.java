@@ -42,7 +42,7 @@ public class ClientRunner implements Runnable {
                         parent.hitCards(stickOrHit);
                         continue;
                     } if(stickOrHit.getOperation() == -1){
-                        parent.stickCards(stickOrHit);
+                        parent.stickCards();
                         stick = true;
 
                     }

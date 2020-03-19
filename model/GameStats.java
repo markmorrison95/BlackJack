@@ -49,10 +49,13 @@ public class GameStats extends HashMap<Integer, Player>{
     }
     public void allBetsRecieved(){
         waitingForBets = false;
-        int s = this.size();
+        final int s = this.size();
         roundSize = s;
     }
     public int getRoundSize(){
         return this.roundSize;
+    }
+    public void resetBettingRound() {
+        waitingForBets = true;
     }
 }

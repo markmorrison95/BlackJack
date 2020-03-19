@@ -14,14 +14,14 @@ import javax.swing.border.EmptyBorder;
  * cardPanel
  */
 public class DealerPanel extends JPanel{
-    private JPanel cardOne, cardTwo, cardThree, cardFour, cardFive, dealerInfo, noPlayersPanel;
+    private JPanel cardOne, cardTwo, cardThree, cardFour, cardFive, cardSix, cardSeven, dealerInfo, noPlayersPanel;
     private JLabel dealerScore, noPlayers;
 
     public DealerPanel(){
         Color darkGreen = new Color(0, 102, 0);
         this.setBackground(darkGreen);
         this.setBorder(new EmptyBorder(10, 30, 0, 30));
-        GridLayout layout = new GridLayout(1,7);
+        GridLayout layout = new GridLayout(1,9);
         layout.setHgap(25);
         this.setLayout(layout);
 
@@ -54,6 +54,12 @@ public class DealerPanel extends JPanel{
         cardFive = new JPanel();
         cardFive.setLayout(new GridLayout());
         cardFive.setVisible(false);
+        cardSix = new JPanel();
+        cardSix.setLayout(new GridLayout());
+        cardSix.setVisible(false);
+        cardSeven = new JPanel();
+        cardSeven.setLayout(new GridLayout());
+        cardSeven.setVisible(false);
         dealerInfo = new JPanel();
         dealerInfo.setBackground(darkGreen);
         dealerInfo.setLayout(new GridLayout(2,1));
@@ -71,16 +77,20 @@ public class DealerPanel extends JPanel{
         this.add(cardThree);
         this.add(cardFour); 
         this.add(cardFive);
+        this.add(cardSix);
+        this.add(cardSeven);
         this.add(dealerInfo);
     }
 
     public JPanel[] getDealerCardPanels(){
-        JPanel[] dCards = new JPanel[5];
+        JPanel[] dCards = new JPanel[7];
         dCards[0] = this.cardOne;
         dCards[1] = this.cardTwo;
         dCards[2] = this.cardThree;
         dCards[3] = this.cardFour;
         dCards[4] = this.cardFive;
+        dCards[5] = this.cardSix;
+        dCards[6] = this.cardSeven;
         return dCards;
     }
 
