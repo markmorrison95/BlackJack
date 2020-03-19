@@ -103,11 +103,21 @@ public class SwingGameClient extends JFrame implements ActionListener {
             betButtonsDisabled();
             updateUserCards(gs);
             updateDealerCards(gs);
-            if (gs.getActivePlayer() == ID) {
+            if (gs.getActivePlayer() == ID && !(gs.get(ID).isBust())) {
                 gameInfoLabel.setText("Choose Hit or Stick");
                 hitButton.setEnabled(true);
                 stickButton.setEnabled(true);
-            }else{
+            }if (gs.getActivePlayer() == ID && gs.get(ID).isBust()) {
+                gameInfoLabel.setText("BUST!");
+                hitButton.setEnabled(false);
+                stickButton.setEnabled(false);
+                try {
+                    outputStream.writeObject(new StickOrHit(this.ID, -1));
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            else{
                 gameInfoLabel.setText("Waiting for other Players");
             }
         }
