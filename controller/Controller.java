@@ -41,10 +41,10 @@ public class Controller {
     }
 
     public void placeBet(Bet bet) {
-        User u = (User) gameStats.get(bet.getPlayerId());
-        bank.addMoney(u.removeMoney(bet.getBetAmount()));
-        if (bank.getNoBets() == (gameStats.size() - 1)) {
-            bank.resetNoBets();
+        Player p = gameStats.get(bet.getPlayerId());
+        p.makeBet(bet.getBetAmount());
+        gameStats.betMade();
+        if (gameStats.getNoBets() == (gameStats.size() - 1)) {
             gameStats.allBetsRecieved();
             dealCards();
         }
@@ -65,6 +65,22 @@ public class Controller {
         } else {
             gameStats.increaseActivePlayer();
             gameServer.transmitStatsToAll();
+        }
+    }
+
+    public void blackjackWinnerCheck(){
+        boolean isBlackJackWin = false;
+        for(Player p : gameStats.values()){
+            if(p.getCurrentScore() == 21){
+                p.blackjackWin();
+                isBlackJackWin = true;
+            }
+        }
+        if(isBlackJackWin == true){
+            gameServer.transmitFirstRoundWinner(true);
+            nextRound();
+        }else{
+            gameServer.transmitFirstRoundWinner(false);
         }
     }
 
@@ -89,17 +105,15 @@ public class Controller {
         }
         gameServer.transmitStatsToAll();
         nextRound();
-
     }
 
     public void nextRound() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }finally{
             gameStats.resetBettingRound();
-            gameStats.increaseActivePlayer();
             removeAllPlayersHands();
             gameServer.transmitStatsToAll();
         }
@@ -120,11 +134,13 @@ public class Controller {
             }
         }
         gameServer.transmitStatsToAll();
+        blackjackWinnerCheck();
     }
 
     public void removeAllPlayersHands(){
             for(Player player : gameStats.values()) {
                 usedDeck.addAll(player.getAndRemoveAllCards());
+                System.out.println(usedDeck.size());
             }
     }
 
@@ -132,7 +148,9 @@ public class Controller {
         /**
          * adds the used cards back into the main deck and shuffles
          */
+        System.out.println(usedDeck.size());
         mainDeck.addAll(usedDeck);
+        usedDeck.clear();
         mainDeck.shuffleDeck();
     }
 
@@ -154,7 +172,7 @@ public class Controller {
     public void readInCards() {
         Scanner scanner = null;
         try {
-            scanner = new Scanner(new File("deckOfCards.txt"));
+            scanner = new Scanner(new File("loadedCards.txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

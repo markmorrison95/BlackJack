@@ -17,6 +17,7 @@ public class ClientRunner implements Runnable {
     private GameServer parent = null;
     private ObjectInputStream inputStream = null;
     private ObjectOutputStream outputStream = null;
+    private boolean waiting, firstRoundWinner;
 
     public ClientRunner(Socket socket, GameServer parent) {
         this.socket = socket;
@@ -32,19 +33,25 @@ public class ClientRunner implements Runnable {
     public void run() {
         try {
             while (true) {
+                waiting = true;
                 Bet bet = (Bet) inputStream.readObject();
                 parent.makeBet(bet);
                 StickOrHit stickOrHit = null;
                 boolean stick = false;
-                while (!stick) {
-                    stickOrHit = (StickOrHit)inputStream.readObject();
-                    if (stickOrHit.getOperation() == 1) {
-                        parent.hitCards(stickOrHit);
-                        continue;
-                    } if(stickOrHit.getOperation() == -1){
-                        parent.stickCards();
-                        stick = true;
+                while (waiting) {
+                }
+                if(!firstRoundWinner){
+                    while (!stick) {
+                        stickOrHit = (StickOrHit) inputStream.readObject();
+                        if (stickOrHit.getOperation() == 1) {
+                            parent.hitCards(stickOrHit);
+                            continue;
+                        }
+                        if (stickOrHit.getOperation() == -1) {
+                            parent.stickCards();
+                            stick = true;
 
+                        }
                     }
                 }
             }
@@ -55,15 +62,19 @@ public class ClientRunner implements Runnable {
             e.printStackTrace();
         }
     }
+    public void setFirstRoundWinner(boolean b){
+        firstRoundWinner = b;
+        waiting = false;
+    }
 
     public void transmitGameStats(GameStats gs) {
         // transmit game stats to client connected to this thread
         try {
             outputStream.writeUnshared(gs);
             outputStream.reset();
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
 }

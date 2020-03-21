@@ -8,14 +8,21 @@ import java.util.HashMap;
 public class GameStats extends HashMap<Integer, Player>{
     private int noCardsInDeck;
     private int activePlayer;
-    private int roundSize;
+    private int roundSize, noBets;
     private boolean waitingForBets;
 
     public GameStats(Deck mainDeck){
+        noBets = 0;
         roundSize = 1;
         waitingForBets = true;
         noCardsInDeck = mainDeck.size();
         activePlayer = 1;
+    }
+    public int getNoBets() {
+        return this.noBets;
+    }
+    public void betMade(){
+        noBets++;
     }
 
     public void addPlayer(Player player){
@@ -57,5 +64,7 @@ public class GameStats extends HashMap<Integer, Player>{
     }
     public void resetBettingRound() {
         waitingForBets = true;
+        activePlayer = 1;
+        noBets = 0;
     }
 }

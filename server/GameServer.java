@@ -62,6 +62,13 @@ public class GameServer implements Runnable {
     public void makeBet(Bet bet){
         controller.placeBet(bet);
     }
+    public void transmitFirstRoundWinner(boolean b) {
+        // send game stats to all clients connected
+        for (ClientRunner cr : clients) {
+                cr.setFirstRoundWinner(b);
+        }
+    }
+
 
     public void transmitStatsToAll() {
         // send game stats to all clients connected

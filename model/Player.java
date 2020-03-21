@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class Player extends ArrayList<Card>{
     private int ID;
     private int money;
+    private int currentBet;
     public Player(int ID, int money){
         this.ID = ID;
         this.money = money;
@@ -15,9 +16,27 @@ public class Player extends ArrayList<Card>{
     public int getID(){
         return this.ID;
     }
+    public void blackjackWin(){
+        money += (currentBet + (currentBet*1.5));
+        currentBet = 0;
+    }
+
+    public void win(){
+        money += (currentBet*2);
+        currentBet = 0;
+    }
+
+    public void draw(){
+        money += currentBet;
+        currentBet = 0;
+    }
+    public void lose(){
+        currentBet = 0;
+    }
 
     public ArrayList<Card> getAndRemoveAllCards(){
-        ArrayList<Card>  currentHand = this;
+        ArrayList<Card> currentHand = new ArrayList<>();
+        currentHand.addAll(this);
         this.clear();
         return currentHand;
     }
@@ -36,9 +55,9 @@ public class Player extends ArrayList<Card>{
         return this.money;
     }
     
-    public int removeMoney(int amount){
+    public void makeBet(int amount){
         money -= amount;
-        return amount;
+        currentBet = amount;
     }
 
     public void addMoney(int amount){
