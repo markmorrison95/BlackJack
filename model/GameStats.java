@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -10,6 +11,7 @@ public class GameStats extends HashMap<Integer, Player>{
     private int activePlayer;
     private int roundSize, noBets;
     private boolean waitingForBets;
+    private ArrayList<Player> winners;
 
     public GameStats(Deck mainDeck){
         noBets = 0;
@@ -17,6 +19,11 @@ public class GameStats extends HashMap<Integer, Player>{
         waitingForBets = true;
         noCardsInDeck = mainDeck.size();
         activePlayer = 1;
+        winners = new ArrayList<>();
+    }
+
+    public void addWinners(ArrayList<Player> winners){
+        winners.addAll(winners);
     }
     public int getNoBets() {
         return this.noBets;
@@ -66,5 +73,6 @@ public class GameStats extends HashMap<Integer, Player>{
         waitingForBets = true;
         activePlayer = 1;
         noBets = 0;
+        winners.clear();
     }
 }
