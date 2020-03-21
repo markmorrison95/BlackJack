@@ -1,14 +1,9 @@
 package controller;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.Scanner;
-import java.util.Map.Entry;
-
 import model.*;
-import model.enums.CardValue;
-import model.enums.Suit;
+import model.enums.*;
 import server.GameServer;
 
 /**
