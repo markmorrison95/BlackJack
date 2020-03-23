@@ -26,7 +26,7 @@ public class MainPanel extends JPanel {
         gameInfo.setBorder(new EmptyBorder(10, 10, 10, 10));
         gameInfo.setBackground(darkGreen);
         gameInfoLabel = new JLabel("Place Bet and CLick Deal to Start Once Players have Joined");
-        gameInfoLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        gameInfoLabel.setFont(new Font("Serif", Font.BOLD, 20));
         gameInfoLabel.setForeground(Color.yellow);
         JPanel activePlayerPanel = new JPanel();
         activePlayerPanel.setLayout(new GridLayout(2, 1));

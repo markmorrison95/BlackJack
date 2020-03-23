@@ -72,6 +72,7 @@ public class Controller {
         for (Player p : gameStats.values()) {
             if (p.getCurrentScore() == 21) {
                 p.blackjackWin();
+                gameStats.addAwinner(p);
                 isBlackJackWin = true;
             }
         }
@@ -89,45 +90,48 @@ public class Controller {
          * is no one with 21 then will find the score or equal scores that are closest
          * to 21. these need to be under 21 to count
          */
-        ArrayList<Player> winner = new ArrayList<>();
+        ArrayList<Player> winners = new ArrayList<>();
         for (Player p : gameStats.values()) {
             if (p.getCurrentScore() == 21) {
-                winner.add(p);
+                winners.add(p);
             }
         }
-        if (winner.size() == 0) {
+        if (winners.size() == 0) {
             for (Player p : gameStats.values()) {
-                if (p.getCurrentScore() < 21 && winner.size() == 0) {
-                    winner.add(p);
-                } else if (p.getCurrentScore() < 21 && winner.size() > 0) {
-                    if (p.getCurrentScore() > winner.get(0).getCurrentScore()) {
-                        winner.clear();
-                        winner.add(p);
-                    } else if (p.getCurrentScore() == winner.get(0).getCurrentScore()) {
-                        winner.add(p);
+                if (p.getCurrentScore() < 21 && winners.size() == 0) {
+                    winners.add(p);
+                } else if (p.getCurrentScore() < 21 && winners.size() > 0) {
+                    if (p.getCurrentScore() > winners.get(0).getCurrentScore()) {
+                        winners.clear();
+                        winners.add(p);
+                    } else if (p.getCurrentScore() == winners.get(0).getCurrentScore()) {
+                        winners.add(p);
                     }
                 }
             }
         }
-        if (winner.size() == 0) {
+        gameStats.addWinners(winners);
+        for(Player p:winners){
+            System.out.println(p.getID());
+        }
+        if (winners.size() == 0) {
             for (Player p : gameStats.values()) {
                 p.lose();
             }
         }
 
-        else if (winner.size() == 1) {
+        else if (winners.size() == 1) {
             for (Player p : gameStats.values()) {
-                if (p.getID() == winner.get(0).getID()) {
+                if (p.getID() == winners.get(0).getID()) {
                     p.win();
                 } else {
                     p.lose();
                 }
             }
-        }
-        else if (winner.size() > 0) {
+        } else if (winners.size() > 0) {
             for (Player p : gameStats.values()) {
-                for (Player pW : winner) {
-                    if (p.getID() ==  pW.getID()){
+                for (Player pW : winners) {
+                    if (p.getID() == pW.getID()) {
                         p.draw();
                     } else {
                         p.lose();
@@ -157,7 +161,14 @@ public class Controller {
             }
         }
         winCheck();
+        gameStats.endOfRound();
         gameServer.transmitStatsToAll();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         nextRound();
     }
 
