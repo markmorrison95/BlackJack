@@ -24,6 +24,7 @@ public class Controller {
         usedDeck = new Deck();
         gameStats = new GameStats(mainDeck);
         readInCards();
+        readInCards();
         mainDeck.shuffleDeck();
         dealer = new Dealer();
         bank = new Bank();
@@ -113,19 +114,19 @@ public class Controller {
             }
         }
 
-        if (winner.size() == 1) {
+        else if (winner.size() == 1) {
             for (Player p : gameStats.values()) {
-                if (p.equals(winner.get(0))) {
+                if (p.getID() == winner.get(0).getID()) {
                     p.win();
                 } else {
                     p.lose();
                 }
             }
         }
-        if (winner.size() > 0) {
-            for (Player p : winner) {
+        else if (winner.size() > 0) {
+            for (Player p : gameStats.values()) {
                 for (Player pW : winner) {
-                    if (p.equals(pW)) {
+                    if (p.getID() ==  pW.getID()){
                         p.draw();
                     } else {
                         p.lose();
@@ -142,7 +143,7 @@ public class Controller {
     public void dealerRound() {
         gameStats.setDealerActivePlayer();
         Player dealer = gameStats.get(0);
-        while (dealer.getCurrentScore() < 18) {
+        while (dealer.getCurrentScore() < 17) {
             if (mainDeck.refillTime()) {
                 refillDeck();
             }
@@ -154,6 +155,7 @@ public class Controller {
                 e.printStackTrace();
             }
         }
+        winCheck();
         gameServer.transmitStatsToAll();
         nextRound();
     }
@@ -207,7 +209,7 @@ public class Controller {
     public void readInCards() {
         Scanner scanner = null;
         try {
-            scanner = new Scanner(new File("loadedCards.txt"));
+            scanner = new Scanner(new File("deckOfCards.txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

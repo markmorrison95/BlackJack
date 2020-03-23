@@ -44,10 +44,12 @@ public class ClientRunner implements Runnable {
                     while (!stick) {
                         stickOrHit = (StickOrHit) inputStream.readObject();
                         if (stickOrHit.getOperation() == 1) {
+                            System.out.println("hit");
                             parent.hitCards(stickOrHit);
                             continue;
                         }
                         if (stickOrHit.getOperation() == -1) {
+                            System.out.println("stick");
                             parent.stickCards();
                             stick = true;
 
