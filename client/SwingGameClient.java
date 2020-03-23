@@ -202,6 +202,7 @@ public class SwingGameClient extends JFrame implements ActionListener {
     public void sendStickOrHit(int operation){
         try {
             outputStream.writeObject(new StickOrHit(this.ID, operation));
+            System.out.println("sent");
             outputStream.reset();
         } catch (IOException e1) {
             e1.printStackTrace();
@@ -224,9 +225,11 @@ public class SwingGameClient extends JFrame implements ActionListener {
         }
         if (e.getSource() == hitButton) {
             sendStickOrHit(1);
+            System.out.println("hit");
         }
         if (e.getSource() == stickButton) {
             sendStickOrHit(-1);
+            System.out.println("stick");
             hitAndStickEnabled(false);
         }
         if (e.getSource() == bet10Button) {

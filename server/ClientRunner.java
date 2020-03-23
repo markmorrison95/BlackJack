@@ -39,17 +39,21 @@ public class ClientRunner implements Runnable {
                 StickOrHit stickOrHit = null;
                 boolean stick = false;
                 while (waiting) {
+                    try {
+                        Thread.sleep(0);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 }
                 if(!firstRoundWinner){
                     while (!stick) {
                         stickOrHit = (StickOrHit) inputStream.readObject();
                         if (stickOrHit.getOperation() == 1) {
-                            System.out.println("hit");
                             parent.hitCards(stickOrHit);
                             continue;
                         }
                         if (stickOrHit.getOperation() == -1) {
-                            System.out.println("stick");
                             parent.stickCards();
                             stick = true;
 
@@ -73,6 +77,7 @@ public class ClientRunner implements Runnable {
         // transmit game stats to client connected to this thread
         try {
             outputStream.writeUnshared(gs);
+            System.out.println("client runner: transmit stats");
             outputStream.reset();
         } catch (IOException e) {
             e.printStackTrace();

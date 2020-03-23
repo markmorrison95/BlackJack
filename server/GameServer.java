@@ -73,10 +73,7 @@ public class GameServer implements Runnable {
     public void transmitStatsToAll() {
         // send game stats to all clients connected
         for (ClientRunner cr : clients) {
-            if (cr != null) {
                 cr.transmitGameStats(gameStats);
-            }
         }
     }
-
 }

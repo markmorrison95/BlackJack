@@ -58,6 +58,7 @@ public class Controller {
     }
 
     public void stickCards() {
+        System.out.println("controller: stick method");
         if (gameStats.getActivePlayer() == (gameStats.getRoundSize() - 1)) {
             dealerRound();
         } else {
@@ -86,7 +87,7 @@ public class Controller {
         /**
          * checks for players that have 21 first and adds them to an arraylist if there
          * is no one with 21 then will find the score or equal scores that are closest
-         * to 21. these need to be under 21 ro count
+         * to 21. these need to be under 21 to count
          */
         ArrayList<Player> winner = new ArrayList<>();
         for (Player p : gameStats.values()) {
