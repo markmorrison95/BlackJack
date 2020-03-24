@@ -3,12 +3,12 @@ package model;
 import java.io.Serializable;
 
 /**
- * StickOrHit
+ * StickOrHit is used to pass info from the client to the server.
+ * allows an operation and the players ID to be passed
  */
     public class StickOrHit implements Serializable {
     private int ID;
     private int operation;
-
 
     public StickOrHit(int ID, int operation){
         this.ID = ID;

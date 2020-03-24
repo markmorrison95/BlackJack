@@ -3,7 +3,8 @@ package model;
 import java.io.Serializable;
 
 /**
- * Bet
+ * Bet object which contains a players ID and a bet amount
+ * this is used to pass the best between the client and the server
  */
 public class Bet implements Serializable{
     private int betAmount, playerID;

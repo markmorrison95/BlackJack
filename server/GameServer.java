@@ -71,6 +71,7 @@ public class GameServer implements Runnable {
     public void clientLeft(int ID){
         clients.remove((ID-1));
         gameStats.remove(ID);
+        transmitStatsToAll();
     }
 
     public void removeClient(int ID){

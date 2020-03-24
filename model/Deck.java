@@ -3,7 +3,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Deck
+ * Deck stores a collection of cards. Is used for the main deck ans also for the used pile
+ * of cards after each round. Allows shuffling of the cards.
  */
 public class Deck extends ArrayList<Card>{
 
@@ -24,6 +25,9 @@ public class Deck extends ArrayList<Card>{
         Collections.shuffle(this);
     }
     public boolean refillTime(){
+        /**
+         * boolean that says the deck should be refilled if less than 6 cards
+         */
         return(this.size() < 6);
     }
 }

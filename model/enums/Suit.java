@@ -1,6 +1,8 @@
 package model.enums;
 
-
+/**
+ * defines the suit of each cards and assigns a numerical value to represent
+ */
 public enum Suit {
     SPADES(1), CLUBS(2), DIAMONDS(3), HEARTS(4);
  

@@ -16,7 +16,6 @@ public class Controller {
     GameStats gameStats;
     Deck mainDeck, usedDeck;
     Dealer dealer;
-    Bank bank;
     GameServer gameServer;
 
     public Controller() {
@@ -24,10 +23,8 @@ public class Controller {
         usedDeck = new Deck();
         gameStats = new GameStats(mainDeck);
         readInCards();
-        readInCards();
         mainDeck.shuffleDeck();
         dealer = new Dealer();
-        bank = new Bank();
         gameStats.addPlayer(dealer);
         Thread t = new Thread(gameServer = new GameServer(this, gameStats));
         t.start();
@@ -38,12 +35,19 @@ public class Controller {
         }
     }
 
+    public void resetGame(){
+        /**
+         * resets the game when the last player has lost(run out of money)
+         */
+
+    }
+
     public void placeBet(Bet bet) {
         Player p = gameStats.get(bet.getPlayerId());
         p.makeBet(bet.getBetAmount());
         gameStats.betMade();
         if (gameStats.getNoBets() == (gameStats.size() - 1)) {
-            gameStats.allBetsRecieved();
+            gameStats.allBetsReceived();
             dealCards();
         }
 
@@ -67,16 +71,21 @@ public class Controller {
     }
 
     public void blackjackWinnerCheck() {
+        /**
+         * checks for a player who has 21, this if called after the first round is dealt
+         * if a player or players have 21 they automatically win
+         */
         boolean isBlackJackWin = false;
         for (Player p : gameStats.values()) {
             if (p.getCurrentScore() == 21) {
                 p.blackjackWin();
-                gameStats.addAwinner(p);
+                gameStats.addOneWinner(p);
                 isBlackJackWin = true;
             }
         }
         if (isBlackJackWin == true) {
             gameServer.transmitFirstRoundWinner(true);
+            gameServer.transmitStatsToAll();
             nextRound();
         } else {
             gameServer.transmitFirstRoundWinner(false);
@@ -124,24 +133,37 @@ public class Controller {
                     p.lose();
                 }
             }
-        } else if (winners.size() > 0) {
+        } else if (winners.size() > 1) {
+            boolean b;
             for (Player p : gameStats.values()) {
+                b = false;
                 for (Player pW : winners) {
                     if (p.getID() == pW.getID()) {
                         p.draw();
-                    } else {
-                        p.lose();
+                        b = true;
                     }
+                }
+                if(!b){
+                    p.lose();
                 }
             }
         }
     }
 
     public void addUser(int ID) {
+        /**
+         * adds a new user when they open a client and assigns them an ID
+         */
         gameStats.addPlayer(new User(ID));
     }
 
     public void dealerRound() {
+        /**
+         * this plays the round automatically for the dealer. if under 17 they must hit and if 17 or over they must stick
+         * sleeps for a second after each new card dealt 
+         * the win check is then called because all players now have there final hands
+         * transmits the winners and then moves to the next round
+         */
         gameStats.setDealerActivePlayer();
         Player dealer = gameStats.get(0);
         while (dealer.getCurrentScore() < 17) {
@@ -151,26 +173,27 @@ public class Controller {
             dealer.add(mainDeck.getAndRemoveCard());
             gameServer.transmitStatsToAll();
             try {
-                Thread.sleep(1500);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
         winCheck();
         gameServer.transmitStatsToAll();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         nextRound();
     }
 
     public void nextRound() {
+        /**
+         * checks if any players have run out of money. 
+         * sleeps for 3 seconds to allow users to read the info label with the round outcome
+         * 
+         * then resets the players hands and tells the gameStats object that its going back to betting
+         * and sends this to all the clients
+         */
         moneyCheck();
         try {
-            Thread.sleep(2000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -203,18 +226,31 @@ public class Controller {
         }
     }
 
-    public void moneyCheck(){
-        ArrayList<Integer> losers = new ArrayList<>();
-        for(Player p:gameStats.values()){
-            if(p.getBalance() <= 0 && p.getID() != 0){
-                losers.add(p.getID());
+    public void moneyCheck() {
+        /**
+         * checks if any user has run out of money. They are then removed from the game.
+         * if it is the last player who is out of money then it will rest the game.
+         */
+            ArrayList<Integer> losers = new ArrayList<>();
+            for (Player p : gameStats.values()) {
+                if (p.getBalance() <= 0 && p.getID() != 0) {
+                    losers.add(p.getID());
+                }
             }
-        }for(Integer i:losers){
-            removePlayer(i);
+            if(gameStats.size() == 2 && losers.size() == 1){
+                resetGame();
+            }else{
+            for (Integer i : losers) {
+                removePlayer(i);
+            }
         }
     }
 
     public void removePlayer(int ID){
+        /**
+         * removes the player who's ID is passed
+         * they are removed from the game stats object and also from the ClientRunner list in server
+         */
         gameServer.removeClient(ID);
         gameStats.remove(ID);
     }
@@ -229,9 +265,13 @@ public class Controller {
     }
 
     public void readInCards() {
+        /**
+         * reads in the deck of cards file and creates a new card object with each line
+         * then adds these to the mainDeck
+         */
         Scanner scanner = null;
         try {
-            scanner = new Scanner(new File("deckOfCards.txt"));
+            scanner = new Scanner(new File("TwoDecksOfCards.txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

@@ -5,19 +5,14 @@ import java.io.Serializable;
 import model.enums.*;
 
 /**
- * Card
+ * Card uses enums to represent the suit of the card and the rank of the card
  */
-public class Card implements Comparable<Card>, Serializable{
+public class Card implements Serializable{
     private CardValue rank;
     private Suit suit;
     public Card(Suit suit, CardValue rank){
         this.suit = suit;
         this.rank = rank;
-    }
-
-    @Override
-    public int compareTo(Card o) {
-        return this.rank.cardValue().compareTo(o.rank.cardValue());
     }
 
     public CardValue getCardRank(){

@@ -42,18 +42,14 @@ public class SwingGameClient extends JFrame implements ActionListener {
             GameStats gs = null;
             try {
                 while ((gs = (GameStats) inputStream.readUnshared()) != null) {
-                    // what to do with input ie. game stats
-                    /******************************************************** */
                     parent.updateGameInfo(gs);
                 }
-
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
-                gameInfoLabel.setText("You Exited the Game!");
-            } finally {
-                return null;
+                gameInfoLabel.setText("You exited the Game");
+            }catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
+            return null;
         }
     }
 
@@ -226,19 +222,18 @@ public class SwingGameClient extends JFrame implements ActionListener {
         bet10Button.setEnabled(b);
         bet20Button.setEnabled(b);
         bet50Button.setEnabled(b);
-        }
-        if(b && balance < 20){
-            bet10Button.setEnabled(b);
-            bet20Button.setEnabled(false);
-            bet50Button.setEnabled(false);
-        }if(b && balance < 50){
-            bet10Button.setEnabled(b);
-            bet20Button.setEnabled(b);
-            bet50Button.setEnabled(false);
         }if(b && balance >=50){
             bet10Button.setEnabled(b);
             bet20Button.setEnabled(b);
             bet50Button.setEnabled(b);
+        }if(b && balance < 50){
+            bet10Button.setEnabled(b);
+            bet20Button.setEnabled(b);
+            bet50Button.setEnabled(false);
+        }if(b && balance < 20){
+            bet10Button.setEnabled(b);
+            bet20Button.setEnabled(false);
+            bet50Button.setEnabled(false);
         }
     }
     public void hitAndStickEnabled(boolean b){
@@ -247,6 +242,11 @@ public class SwingGameClient extends JFrame implements ActionListener {
     }
 
     public void sendStickOrHit(int operation){
+        /**
+         * takes an int as the arguments specifying the operation.
+         * then creates a StickOrHit object with the players ID and the operation
+         * Then sends this back to the server
+         */
         try {
             outputStream.writeObject(new StickOrHit(this.ID, operation));
             outputStream.reset();
@@ -257,6 +257,16 @@ public class SwingGameClient extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        /**
+         * defines the required action for each button
+         * 
+         * when a bet button is pressed it adds that amount to the class variable bet and
+         * updates the current bet label. When deal is then pressed it sends a bet object which is created
+         * with the bet variable and the client ID. And disables the bet and deal buttons
+         * 
+         * when the hit or stick is clicked it sends a hitOrStick object to the server
+         * when stick us clicked disables the hit and stick buttons
+         */
         if (e.getSource() == dealButton) {
             try {
                 outputStream.writeObject(new Bet(ID, currentBet));
@@ -295,6 +305,10 @@ public class SwingGameClient extends JFrame implements ActionListener {
     }
 
     public void initializeComponents() {
+        /**
+         * initiates all the swing components needed to be editable for updating with current game info
+         * also initiates the buttons and adds action listeners to them
+         */
         currentBet = 0;
         userCards = main.getUserCardPanels();
         dealerCards = main.getDealerCardPanels();
