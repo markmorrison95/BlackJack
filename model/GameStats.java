@@ -12,10 +12,11 @@ import java.util.HashMap;
 public class GameStats extends HashMap<Integer, Player>{
     private int activePlayer;
     private int maxUserID, noBets;
-    private boolean waitingForBets;
+    private boolean waitingForBets, gameReset;
     private ArrayList<Player> winners;
 
     public GameStats(Deck mainDeck){
+        gameReset = false;
         noBets = 0;
         // initiates game with betting round
         waitingForBets = true;
@@ -32,6 +33,13 @@ public class GameStats extends HashMap<Integer, Player>{
     }
     public ArrayList<Player> getWinners(){
         return this.winners;
+    }
+
+    public void resetGame(boolean b){
+        gameReset = b;
+    }
+    public boolean hasGameBeenReset(){
+        return this.gameReset;
     }
 
 

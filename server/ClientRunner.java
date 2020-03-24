@@ -90,5 +90,8 @@ public class ClientRunner implements Runnable {
             e.printStackTrace();
         }
     }
+    public int getID() {
+        return this.ID;
+    }
 
 }

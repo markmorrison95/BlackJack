@@ -94,6 +94,9 @@ public class SwingGameClient extends JFrame implements ActionListener {
     }
 
     public void updateGameInfo(GameStats gs) {
+        if(gs.hasGameBeenReset()){
+            gameInfoLabel.setText("You're Broke Mate, Game Reset!");
+        }else{
         noPlayers.setText("" + (gs.size() - 1));
         currentBalanceLabel.setText("" + gs.get(ID).getBalance());
         if (!gs.isWaitingForBets()) {
@@ -135,6 +138,7 @@ public class SwingGameClient extends JFrame implements ActionListener {
                 gameInfoLabel.setText("Place Bet and Click Deal to Start");
             }
         }
+    }
 
     public void setWinnersLabel(ArrayList<Player> winners){
         boolean b = false;

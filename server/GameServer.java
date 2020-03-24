@@ -69,16 +69,24 @@ public class GameServer implements Runnable {
         }
     }
     public void clientLeft(int ID){
-        clients.remove((ID-1));
+        for(ClientRunner cr : clients){
+            if(cr.getID() == ID){
+                clients.remove(cr);
+                break;
+            }
+        }
         gameStats.remove(ID);
         transmitStatsToAll();
     }
 
     public void removeClient(int ID){
-        //closes client socket then removes from list
-        ID--;
-        clients.get(ID).closeClient();
-        clients.remove(ID);
+        for(ClientRunner cr : clients){
+            if(cr.getID() == ID){
+                cr.closeClient();
+                clients.remove(cr);
+                break;
+            }
+        }
     }
 
 

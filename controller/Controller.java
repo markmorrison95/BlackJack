@@ -35,17 +35,20 @@ public class Controller {
         }
     }
 
-    public void resetGame(){
-        for(Player p: gameStats.values()){
-           if(p.getID() != 0){
-               p.resetBalance();
-           }
+    public void resetGame() {
+        gameStats.resetGame(true);
+        for (Player p : gameStats.values()) {
+            if (p.getID() != 0) {
+                p.resetBalance();
+            }
         }
+        gameServer.transmitStatsToAll();
+        try {Thread.sleep(3000);} catch (InterruptedException e) { e.printStackTrace();}
         usedDeck.clear();
         mainDeck.clear();
         readInCards();
+        gameStats.resetGame(false);
         nextRound();
-
     }
 
     public void placeBet(Bet bet) {
