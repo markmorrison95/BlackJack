@@ -6,6 +6,6 @@ package model;
  */
 public class User extends Player{
     public User(int ID){
-        super(ID, 200);
+        super(ID, 50);
     }
 }

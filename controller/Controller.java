@@ -36,9 +36,15 @@ public class Controller {
     }
 
     public void resetGame(){
-        /**
-         * resets the game when the last player has lost(run out of money)
-         */
+        for(Player p: gameStats.values()){
+           if(p.getID() != 0){
+               p.resetBalance();
+           }
+        }
+        usedDeck.clear();
+        mainDeck.clear();
+        readInCards();
+        nextRound();
 
     }
 

@@ -8,31 +8,35 @@ import java.util.ArrayList;
  */
 public class Player extends ArrayList<Card>{
     private int ID;
-    private int money;
+    private int balance;
     private int currentBet;
     public Player(int ID, int money){
         this.ID = ID;
-        this.money = money;
+        this.balance = money;
     }
 
     public int getID(){
         return this.ID;
     }
+
+    public void resetBalance(){
+        this.balance = 200;
+    }
     public void blackjackWin(){
         // if natural blackjack is returned 2.5 times there bet
-        money += (currentBet + (currentBet*1.5));
+        balance += (currentBet + (currentBet*1.5));
         currentBet = 0;
     }
 
     public void win(){
         // if wnd of round win gets 2 times there bet
-        money += (currentBet*2);
+        balance += (currentBet*2);
         currentBet = 0;
     }
 
     public void draw(){
         //if draw is returned there original bet
-        money += currentBet;
+        balance += currentBet;
         currentBet = 0;
     }
     public void lose(){
@@ -65,7 +69,7 @@ public class Player extends ArrayList<Card>{
         return currentScore;
     }
     public int getBalance(){
-        return this.money;
+        return this.balance;
     }
     
     public void makeBet(int amount){
@@ -73,7 +77,7 @@ public class Player extends ArrayList<Card>{
          * removes the bet amount from the players current balance and adds
          * it to the currentBet
          */
-        money -= amount;
+        balance -= amount;
         currentBet = amount;
     }
 }
