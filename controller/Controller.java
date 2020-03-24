@@ -58,7 +58,7 @@ public class Controller {
     }
 
     public void stickCards() {
-        if (gameStats.getActivePlayer() == (gameStats.getRoundSize() - 1)) {
+        if (gameStats.getActivePlayer() == gameStats.getMaxUserID()) {
             dealerRound();
         } else {
             gameStats.increaseActivePlayer();
@@ -186,11 +186,11 @@ public class Controller {
          * the used cards and then continues
          */
         for (int i = 0; i < 2; i++) {
-            for (int x = 0; x < gameStats.getRoundSize(); x++) {
+            for (Player p : gameStats.values()) {
                 if (mainDeck.refillTime()) {
                     refillDeck();
                 }
-                gameStats.get(x).add(mainDeck.getAndRemoveCard());
+                p.add(mainDeck.getAndRemoveCard());
             }
         }
         gameServer.transmitStatsToAll();
