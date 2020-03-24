@@ -10,7 +10,7 @@ public class GameStats extends HashMap<Integer, Player>{
     private int noCardsInDeck;
     private int activePlayer;
     private int roundSize, noBets;
-    private boolean waitingForBets, endOfRound;
+    private boolean waitingForBets;
     private ArrayList<Player> winners;
 
     public GameStats(Deck mainDeck){
@@ -19,20 +19,11 @@ public class GameStats extends HashMap<Integer, Player>{
         waitingForBets = true;
         noCardsInDeck = mainDeck.size();
         activePlayer = 1;
-        endOfRound = false;
         winners = new ArrayList<>();
-    }
-
-    public boolean isEndOfRound(){
-        return this.endOfRound;
-    }
-    public void endOfRound(){
-        endOfRound = true;
     }
 
     public void addWinners(ArrayList<Player> w){
         this.winners.addAll(w);
-        System.out.println(winners);
     }
     public void addAwinner(Player p){
         this.winners.add(p);
@@ -78,14 +69,12 @@ public class GameStats extends HashMap<Integer, Player>{
     }
     public void allBetsRecieved(){
         waitingForBets = false;
-        final int s = this.size();
-        roundSize = s;
+        roundSize = this.size();
     }
     public int getRoundSize(){
         return this.roundSize;
     }
     public void resetBettingRound() {
-        endOfRound = false;
         waitingForBets = true;
         activePlayer = 1;
         noBets = 0;

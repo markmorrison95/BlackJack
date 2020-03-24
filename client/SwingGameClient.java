@@ -50,7 +50,7 @@ public class SwingGameClient extends JFrame implements ActionListener {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
-                e.printStackTrace();
+                gameInfoLabel.setText("You Exited the Game!");
             } finally {
                 return null;
             }
@@ -103,11 +103,16 @@ public class SwingGameClient extends JFrame implements ActionListener {
         if (!gs.isWaitingForBets()) {
             int activePlayer = gs.getActivePlayer();
             setActivePlayerLabel(activePlayer);
-            betButtonsEnabled(false);
+            betButtonsEnabled(false, gs.get(ID).getBalance());
             updateUserCards(gs);
             updateDealerCards(gs);
-            if(gs.isEndOfRound()){
+            if (gs.getWinners().size() > 0) {
                 setWinnersLabel(gs.getWinners());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 }else{
                 if ((activePlayer == ID) && !(gs.get(ID).isBust())) {
                     gameInfoLabel.setText("Choose Hit or Stick");
@@ -117,7 +122,11 @@ public class SwingGameClient extends JFrame implements ActionListener {
                     hitAndStickEnabled(false);
                     sendStickOrHit(-1);
                 }
-                else{
+                else if(activePlayer == 0 && gs.get(ID).isBust()){
+                    gameInfoLabel.setText("You're Bust! Dealer to Play!");
+                }else if(activePlayer == 0 && !(gs.get(ID).isBust())){
+                    gameInfoLabel.setText("Dealer to Go!");
+                }else{
                     gameInfoLabel.setText("Waiting for Player " + activePlayer + " to Play Round");
                 }
             }
@@ -125,16 +134,13 @@ public class SwingGameClient extends JFrame implements ActionListener {
                 removeCards();
                 currentBet = 0;
                 currentBetLabel.setText("" + currentBet);
-                betButtonsEnabled(true);
+                betButtonsEnabled(true, gs.get(ID).getBalance());
                 hitAndStickEnabled(false);
                 gameInfoLabel.setText("Place Bet and Click Deal to Start");
             }
         }
 
     public void setWinnersLabel(ArrayList<Player> winners){
-        for(Player p:winners){
-            System.out.println(p.getID());
-        }
         boolean b = false;
         if(winners.size() == 1){
             if(winners.get(0).getID() == this.ID){
@@ -215,10 +221,25 @@ public class SwingGameClient extends JFrame implements ActionListener {
         }
     }
 
-    public void betButtonsEnabled(boolean b) {
+    public void betButtonsEnabled(boolean b, int balance) {
+        if(!b){
         bet10Button.setEnabled(b);
         bet20Button.setEnabled(b);
         bet50Button.setEnabled(b);
+        }
+        if(b && balance < 20){
+            bet10Button.setEnabled(b);
+            bet20Button.setEnabled(false);
+            bet50Button.setEnabled(false);
+        }if(b && balance < 50){
+            bet10Button.setEnabled(b);
+            bet20Button.setEnabled(b);
+            bet50Button.setEnabled(false);
+        }if(b && balance >=50){
+            bet10Button.setEnabled(b);
+            bet20Button.setEnabled(b);
+            bet50Button.setEnabled(b);
+        }
     }
     public void hitAndStickEnabled(boolean b){
         hitButton.setEnabled(b);
@@ -243,7 +264,7 @@ public class SwingGameClient extends JFrame implements ActionListener {
             } catch (IOException e1) {
                 e1.printStackTrace();
             } finally {
-                betButtonsEnabled(false);
+                betButtonsEnabled(false, 0);
                 dealButton.setEnabled(false);
                 gameInfoLabel.setText("Waiting for other Players to Place Bets");
             }

@@ -58,7 +58,6 @@ public class Controller {
     }
 
     public void stickCards() {
-        System.out.println("controller: stick method");
         if (gameStats.getActivePlayer() == (gameStats.getRoundSize() - 1)) {
             dealerRound();
         } else {
@@ -111,9 +110,6 @@ public class Controller {
             }
         }
         gameStats.addWinners(winners);
-        for(Player p:winners){
-            System.out.println(p.getID());
-        }
         if (winners.size() == 0) {
             for (Player p : gameStats.values()) {
                 p.lose();
@@ -161,7 +157,6 @@ public class Controller {
             }
         }
         winCheck();
-        gameStats.endOfRound();
         gameServer.transmitStatsToAll();
         try {
             Thread.sleep(1000);
@@ -173,6 +168,7 @@ public class Controller {
     }
 
     public void nextRound() {
+        moneyCheck();
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -204,15 +200,29 @@ public class Controller {
     public void removeAllPlayersHands() {
         for (Player player : gameStats.values()) {
             usedDeck.addAll(player.getAndRemoveAllCards());
-            System.out.println(usedDeck.size());
         }
+    }
+
+    public void moneyCheck(){
+        ArrayList<Integer> losers = new ArrayList<>();
+        for(Player p:gameStats.values()){
+            if(p.getBalance() <= 0 && p.getID() != 0){
+                losers.add(p.getID());
+            }
+        }for(Integer i:losers){
+            removePlayer(i);
+        }
+    }
+
+    public void removePlayer(int ID){
+        gameServer.removeClient(ID);
+        gameStats.remove(ID);
     }
 
     public void refillDeck() {
         /**
          * adds the used cards back into the main deck and shuffles
          */
-        System.out.println(usedDeck.size());
         mainDeck.addAll(usedDeck);
         usedDeck.clear();
         mainDeck.shuffleDeck();

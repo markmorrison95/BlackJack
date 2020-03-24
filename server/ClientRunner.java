@@ -18,10 +18,12 @@ public class ClientRunner implements Runnable {
     private ObjectInputStream inputStream = null;
     private ObjectOutputStream outputStream = null;
     private boolean waiting, firstRoundWinner;
+    private int ID;
 
-    public ClientRunner(Socket socket, GameServer parent) {
+    public ClientRunner(Socket socket, GameServer parent, int ID) {
         this.socket = socket;
         this.parent = parent;
+        this.ID = ID;
         try {
             outputStream = new ObjectOutputStream(this.socket.getOutputStream());
             inputStream = new ObjectInputStream(this.socket.getInputStream());
@@ -42,7 +44,6 @@ public class ClientRunner implements Runnable {
                     try {
                         Thread.sleep(0);
                     } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }
@@ -65,19 +66,25 @@ public class ClientRunner implements Runnable {
 
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            parent.clientLeft(ID);
         }
     }
     public void setFirstRoundWinner(boolean b){
         firstRoundWinner = b;
         waiting = false;
     }
+    public void closeClient(){
+        try {
+            this.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void transmitGameStats(GameStats gs) {
         // transmit game stats to client connected to this thread
         try {
             outputStream.writeUnshared(gs);
-            System.out.println("client runner: transmit stats");
             outputStream.reset();
         } catch (IOException e) {
             e.printStackTrace();

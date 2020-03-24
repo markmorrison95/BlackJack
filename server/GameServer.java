@@ -41,8 +41,8 @@ public class GameServer implements Runnable {
                 outputStream.writeInt(clientID);
                 outputStream.flush();
                 controller.addUser(clientID);
+                ClientRunner client = new ClientRunner(clientSocket, this, clientID);
                 clientID++;
-                ClientRunner client = new ClientRunner(clientSocket, this);
                 clients.add(client);
                 new Thread(client).start();
                 transmitStatsToAll();
@@ -67,6 +67,17 @@ public class GameServer implements Runnable {
         for (ClientRunner cr : clients) {
                 cr.setFirstRoundWinner(b);
         }
+    }
+    public void clientLeft(int ID){
+        clients.remove((ID-1));
+        gameStats.remove(ID);
+    }
+
+    public void removeClient(int ID){
+        //closes client socket then removes from list
+        ID--;
+        clients.get(ID).closeClient();
+        clients.remove(ID);
     }
 
 
