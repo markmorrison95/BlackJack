@@ -43,7 +43,11 @@ public class Controller {
             }
         }
         gameServer.transmitStatsToAll();
-        try {Thread.sleep(3000);} catch (InterruptedException e) { e.printStackTrace();}
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         usedDeck.clear();
         mainDeck.clear();
         readInCards();
@@ -95,6 +99,11 @@ public class Controller {
         if (isBlackJackWin) {
             gameServer.transmitFirstRoundWinner(true);
             gameServer.transmitStatsToAll();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             nextRound();
         } else {
             gameServer.transmitFirstRoundWinner(false);

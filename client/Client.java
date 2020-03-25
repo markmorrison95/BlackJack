@@ -144,12 +144,6 @@ public class Client extends JFrame implements ActionListener {
                  */
                 if (gs.getWinners().size() > 0) {
                     setWinnersLabel(gs.getWinners());
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
                 } else {
                     /**
                      * if no winner then checks for the active player. If it is the current user
