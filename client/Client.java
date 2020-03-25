@@ -144,7 +144,7 @@ public class Client extends JFrame implements ActionListener {
                  */
                 if (gs.getWinners().size() > 0) {
                     setWinnersLabel(gs.getWinners());
-                } else {
+                } else if(gs.getWinners().size() == 0) {
                     /**
                      * if no winner then checks for the active player. If it is the current user
                      * then moves to asking for them to hit or stick and enables these buttons.

@@ -83,32 +83,7 @@ public class Controller {
         }
     }
 
-    public void blackjackWinnerCheck() {
-        /**
-         * checks for a player who has 21, this if called after the first round is dealt
-         * if a player or players have 21 they automatically win
-         */
-        boolean isBlackJackWin = false;
-        for (Player p : gameStats.values()) {
-            if (p.getCurrentScore() == 21) {
-                p.blackjackWin();
-                gameStats.addOneWinner(p);
-                isBlackJackWin = true;
-            }
-        }
-        if (isBlackJackWin) {
-            gameServer.transmitFirstRoundWinner(true);
-            gameServer.transmitStatsToAll();
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            nextRound();
-        } else {
-            gameServer.transmitFirstRoundWinner(false);
-        }
-    }
+
 
     public void winCheck() {
         /**
@@ -234,8 +209,10 @@ public class Controller {
                 p.add(mainDeck.getAndRemoveCard());
             }
         }
+        boolean win = blackjackWinnerCheck();
+        gameServer.transmitFirstRoundWinner(win);
         gameServer.transmitStatsToAll();
-        blackjackWinnerCheck();
+        if(win){nextRound();}
     }
 
     public void removeAllPlayersHands() {
@@ -289,7 +266,7 @@ public class Controller {
          */
         Scanner scanner = null;
         try {
-            scanner = new Scanner(new File("TwoDecksOfCards.txt"));
+            scanner = new Scanner(new File("loadedCards.txt"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
