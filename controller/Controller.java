@@ -92,7 +92,7 @@ public class Controller {
                 isBlackJackWin = true;
             }
         }
-        if (isBlackJackWin == true) {
+        if (isBlackJackWin) {
             gameServer.transmitFirstRoundWinner(true);
             gameServer.transmitStatsToAll();
             nextRound();

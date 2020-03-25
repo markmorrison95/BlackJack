@@ -114,7 +114,7 @@ public class Client extends JFrame implements ActionListener {
              * if the game is has ended and reset then this label is displayed otherwise the
              * rest of the method is worked through
              */
-            gameInfoLabel.setText("You're Broke Mate, Game Reset!");
+            gameInfoLabel.setText("You're Broke, Game Reset!");
         } else {
             /**
              * sets the label with the number of players. Each time a new player joins a

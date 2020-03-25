@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Client",
+            "request": "launch",
+            "mainClass": "client.Client",
+            "projectName": "BlackJack_f0f2120c"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - mainClass",
             "request": "launch",
             "mainClass": "mainClass",
