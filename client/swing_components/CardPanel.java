@@ -13,7 +13,13 @@ import javax.imageio.ImageIO;
 import java.awt.GridLayout;
 
 /**
- * CardCreator
+ * CardPanel is used for creating the actual playing cards. It takes in the suit and value of
+ * the card and produces a panel with a picture for the suit and either a letter or a number
+ * for the value of the card
+ * 
+ * this class has an overloaded constructor so if it is called without any arguments 
+ * it will create a panel which depicts the back of a playing card. this is used for when
+ * the dealer has there card dealt face down
  */
 public class CardPanel extends JPanel {
 
@@ -55,7 +61,12 @@ public class CardPanel extends JPanel {
     }
 
     private class ImagePanel extends JPanel {
-
+        /**
+         * inner class to create the image panel needed to add to the card panel
+         * 
+         * has an overloaded constructor so if called with no arguments uses the cardback image
+         * and if passed a suit then it can find the right image for that
+         */
         private BufferedImage image;
         private String imagePath;
         public ImagePanel() {
@@ -65,8 +76,6 @@ public class CardPanel extends JPanel {
                 ex.printStackTrace();
            }
         }
-
-
 
         public ImagePanel(Suit suit) {
             if(suit.SuitValue() == 1){
@@ -93,14 +102,5 @@ public class CardPanel extends JPanel {
             super.paintComponent(g);
             g.drawImage(image,  0, 0, getWidth(), getHeight(), this);         
         }
-    
-    }
-    public static void main(String[] args) {
-        JFrame j = new JFrame();
-        j.setDefaultCloseOperation(2);
-        CardPanel c = new CardPanel(CardValue.ACE, Suit.SPADES);
-        j.add(c);
-        j.pack();
-        j.setVisible(true);
     }
 }

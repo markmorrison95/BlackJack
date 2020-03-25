@@ -22,6 +22,8 @@ import java.awt.event.ActionListener;
  * GameClient
  */
 public class SwingGameClient extends JFrame implements ActionListener {
+
+   /****** Swing Worker Class *********************************************************** */ 
     private class ReadWorker extends SwingWorker<Void, Void> {
         private Socket socket = null;
         private ObjectInputStream inputStream = null;
@@ -35,10 +37,13 @@ public class SwingGameClient extends JFrame implements ActionListener {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
-
         public Void doInBackground() {
+            /**
+             * handles the input of the game stats object and passes to the updateGameInfo method in 
+             * the Client class. This always running in the background because it doesn't know when the 
+             * server is going to send something
+             */
             GameStats gs = null;
             try {
                 while ((gs = (GameStats) inputStream.readUnshared()) != null) {
@@ -46,15 +51,18 @@ public class SwingGameClient extends JFrame implements ActionListener {
                 }
             } catch (IOException e) {
                 gameInfoLabel.setText("You exited the Game");
-            }catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
             return null;
         }
     }
+    /**************** End of Swing Worker Class **************************************************/
 
-    private Socket server = null;
-    private ObjectOutputStream outputStream;
+
+
+
+    /******************** Variables required for the swing components **********************************/
     private int ID;
     private MainPanel main;
     private JPanel[] userCards, dealerCards;
@@ -62,6 +70,10 @@ public class SwingGameClient extends JFrame implements ActionListener {
     private JLabel dealerScoreLabel, currentBalanceLabel, currentBetLabel, gameInfoLabel, activePlayerLabel,
             userScoreLabel, noPlayers;
     private int currentBet;
+    /*****************************************************************************************************/
+
+    private Socket server = null;
+    private ObjectOutputStream outputStream;
 
     public SwingGameClient() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,7 +90,6 @@ public class SwingGameClient extends JFrame implements ActionListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         ReadWorker readWorker = new ReadWorker(server, this);
         readWorker.execute();
     }
@@ -93,43 +104,98 @@ public class SwingGameClient extends JFrame implements ActionListener {
         }
     }
 
+
+    /************************* controls the swing components for game play below **********************************/
+
     public void updateGameInfo(GameStats gs) {
-        if(gs.hasGameBeenReset()){
+        /**
+         * the main method that deals with the running input of the game stats object
+         */
+        if (gs.hasGameBeenReset()) {
+            /**
+             * if the game is has ended and reset then this label is displayed otherwise the
+             * rest of the method is worked through
+             */
             gameInfoLabel.setText("You're Broke Mate, Game Reset!");
-        }else{
-        noPlayers.setText("" + (gs.size() - 1));
-        currentBalanceLabel.setText("" + gs.get(ID).getBalance());
-        if (!gs.isWaitingForBets()) {
-            int activePlayer = gs.getActivePlayer();
-            setActivePlayerLabel(activePlayer);
-            betButtonsEnabled(false, gs.get(ID).getBalance());
-            updateUserCards(gs);
-            updateDealerCards(gs);
-            if (gs.getWinners().size() > 0) {
-                setWinnersLabel(gs.getWinners());
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        } else {
+            /**
+             * sets the label with the number of players. Each time a new player joins a
+             * game stats object is sent so this label will update as player join
+             */
+            noPlayers.setText("" + (gs.size() - 1));
+            currentBalanceLabel.setText("" + gs.get(ID).getBalance());
+            /**
+             * if the game is not waiting for bets then it must be game play
+             */
+            if (!gs.isWaitingForBets()) {
+                /**
+                 * sets the active player so the user knows whose turn it is ensures the bet
+                 * buttons are disabled and updates the user cards and dealer cards
+                 */
+                int activePlayer = gs.getActivePlayer();
+                setActivePlayerLabel(activePlayer);
+                betButtonsEnabled(false, gs.get(ID).getBalance());
+                updateUserCards(gs);
+                updateDealerCards(gs);
+
+                /**
+                 * checks for a winner. Does this by checking the size of the winners array in
+                 * the game stats object (if > 0 must be winner). does this first incase there
+                 * is a straight 21 from the deal. If there is a winner sets the label and
+                 * sleeps for 2 seconds so the user can read it
+                 */
+                if (gs.getWinners().size() > 0) {
+                    setWinnersLabel(gs.getWinners());
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    /**
+                     * if no winner then checks for the active player. If it is the current user
+                     * then moves to asking for them to hit or stick and enables these buttons.
+                     * 
+                     * If the user is bust (over 21) then disabled buttons and sets the label to
+                     * display this again sleeping the thread to allow time to read. Sends a
+                     * HitOrStick object with a stick operation to the server so it knows they cant
+                     * get anymore cards
+                     */
+                    if ((activePlayer == ID) && !(gs.get(ID).isBust())) {
+                        gameInfoLabel.setText("Choose Hit or Stick");
+                        hitAndStickEnabled(true);
+                    } else if ((activePlayer == ID) && gs.get(ID).isBust()) {
+                        gameInfoLabel.setText("BUST!");
+                        hitAndStickEnabled(false);
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        sendStickOrHit(-1);
+                    }
+                    /**
+                     * if it is the dealer to go, sets the label to represent this and there cards
+                     * will be updated according to play because they are sent to the
+                     * updateDealerCard method at the top
+                     */
+                    else if (activePlayer == 0 && gs.get(ID).isBust()) {
+                        gameInfoLabel.setText("You're Bust! Dealer to Play!");
+                    } else if (activePlayer == 0 && !(gs.get(ID).isBust())) {
+                        gameInfoLabel.setText("Dealer to Go!");
+                    } else {
+                        gameInfoLabel.setText("Waiting for Player " + activePlayer + " to Play Round");
+                    }
                 }
-                }else{
-                if ((activePlayer == ID) && !(gs.get(ID).isBust())) {
-                    gameInfoLabel.setText("Choose Hit or Stick");
-                    hitAndStickEnabled(true);
-                }else if ((activePlayer == ID) && gs.get(ID).isBust()) {
-                    gameInfoLabel.setText("BUST!");
-                    hitAndStickEnabled(false);
-                    sendStickOrHit(-1);
-                }
-                else if(activePlayer == 0 && gs.get(ID).isBust()){
-                    gameInfoLabel.setText("You're Bust! Dealer to Play!");
-                }else if(activePlayer == 0 && !(gs.get(ID).isBust())){
-                    gameInfoLabel.setText("Dealer to Go!");
-                }else{
-                    gameInfoLabel.setText("Waiting for Player " + activePlayer + " to Play Round");
-                }
-            }
-        }else{
+            } else {
+                /**
+                 * if here then start of round and waiting for bets. Sets active player and
+                 * current score to nothing. Resets the current bet to 0 and enables the betting
+                 * buttons
+                 */
+                setActivePlayerLabel(-1);
+                userScoreLabel.setText("");
                 removeCards();
                 currentBet = 0;
                 currentBetLabel.setText("" + currentBet);
@@ -140,25 +206,40 @@ public class SwingGameClient extends JFrame implements ActionListener {
         }
     }
 
-    public void setWinnersLabel(ArrayList<Player> winners){
+    public void setWinnersLabel(ArrayList<Player> winners) {
+        /**
+         * takes in the array list of winners from the game stats object and works out
+         * if the current client is a winner, loser or a draw. This is done depending on
+         * the size of the array (1 = win, > 1 = draw etc) and the Player ID in the
+         * object
+         */
         boolean b = false;
-        if(winners.size() == 1){
-            if(winners.get(0).getID() == this.ID){
+        if (winners.size() == 1) {
+            if (winners.get(0).getID() == this.ID) {
                 gameInfoLabel.setText("Winner Winner Chicken Dinner!");
-            }else{
+            } else {
                 gameInfoLabel.setText("You Lost");
             }
-        }else if(winners.size() > 1){
-            for(Player p: winners){
-                if(p.getID() == this.ID){
+        } else if (winners.size() > 1) {
+            for (Player p : winners) {
+                if (p.getID() == this.ID) {
                     gameInfoLabel.setText("You drew this round!");
                     b = true;
                 }
-            }if(!b){gameInfoLabel.setText("You Lost!");}
-        }else{gameInfoLabel.setText("You Lost!");}
+            }
+            if (!b) {
+                gameInfoLabel.setText("You Lost!");
+            }
+        } else {
+            gameInfoLabel.setText("You Lost!");
+        }
     }
 
     public void setActivePlayerLabel(int id) {
+        /**
+         * lets the user know who the active player is depending on whether the active
+         * player ID matches up with the ID for this client
+         */
         String player = "" + id;
         if (id == this.ID) {
             player = "You";
@@ -166,11 +247,18 @@ public class SwingGameClient extends JFrame implements ActionListener {
         if (id == 0) {
             player = "Dealer";
         }
+        if (id == -1) {
+            player = "";
+        }
         activePlayerLabel.setText(player);
     }
 
-    public void removeCards(){
-        for(int i = 0; i < userCards.length; i++){
+    public void removeCards() {
+        /**
+         * clears all the CardPanel objects from the window and sets the panel to not
+         * visible this is used at the end of the round when cards are collected back in
+         */
+        for (int i = 0; i < userCards.length; i++) {
             userCards[i].removeAll();
             userCards[i].setVisible(false);
             dealerCards[i].removeAll();
@@ -179,12 +267,13 @@ public class SwingGameClient extends JFrame implements ActionListener {
     }
 
     public void updateUserCards(GameStats gs) {
+        /**
+         * creates a new CardPanel component for each card in the users deck and sets
+         * the current score label
+         */
         ArrayList<Card> uCards = gs.get(ID);
         for (int i = 0; i < uCards.size(); i++) {
             userCards[i].removeAll();
-            /**
-             * removes all components currently addded to stop doubling up of cards
-             */
             userCards[i].add(new CardPanel(uCards.get(i).getCardRank(), uCards.get(i).getCardSuit()));
             userCards[i].setVisible(true);
         }
@@ -192,25 +281,26 @@ public class SwingGameClient extends JFrame implements ActionListener {
     }
 
     public void updateDealerCards(GameStats gs) {
+        /**
+         * sets the card components for the dealer. Deals the first card face down and
+         * the second face up and only displays the current score for the 2nd card. When
+         * it is the dealers turn places all cards face up.
+         * 
+         * for each card creates a new CardPanel component using the variables from the
+         * card
+         * 
+         * If the dealer get a natural (21 on deal) then his cards will be dealt face up
+         * before moving to the next round.
+         */
         ArrayList<Card> dCards = gs.get(0);
-        if (gs.getActivePlayer() == 0) {
+        if ((gs.getActivePlayer() == 0) || (gs.get(0).getCurrentScore() == 21)) {
+            dealerScoreLabel.setText("" + gs.get(0).getCurrentScore());
             for (int i = 0; i < dCards.size(); i++) {
                 dealerCards[i].removeAll();
-                /**
-                 * removes all components currently addded to stop doubling up of cards
-                 */
                 dealerCards[i].add(new CardPanel(dCards.get(i).getCardRank(), dCards.get(i).getCardSuit()));
                 dealerCards[i].setVisible(true);
             }
-            dealerScoreLabel.setText("" + gs.get(0).getCurrentScore());
-        } else if(gs.get(0).getCurrentScore() == 21){
-            dealerScoreLabel.setText("" + gs.get(0).getCurrentScore());
-            for(int i =0; i<2; i++){
-                dealerCards[i].removeAll();
-                dealerCards[i].add(new CardPanel(dCards.get(i).getCardRank(), dCards.get(i).getCardSuit()));
-                dealerCards[i].setVisible(true);
-            }
-        }else{
+        } else {
             dealerScoreLabel.setText("" + dCards.get(1).getCardRank().cardValue());
             dealerCards[0].removeAll();
             dealerCards[0].add(new CardPanel());
@@ -222,34 +312,43 @@ public class SwingGameClient extends JFrame implements ActionListener {
     }
 
     public void betButtonsEnabled(boolean b, int balance) {
-        if(!b){
-        bet10Button.setEnabled(b);
-        bet20Button.setEnabled(b);
-        bet50Button.setEnabled(b);
-        }if(b && balance >=50){
+        /**
+         * takes in a boolean value to decide whether the bet buttons are enabled or
+         * disabled. only allows certain buttons depending on the balance available to
+         * the player
+         */
+        if (!b) {
             bet10Button.setEnabled(b);
             bet20Button.setEnabled(b);
             bet50Button.setEnabled(b);
-        }if(b && balance < 50){
+        }
+        if (b && balance >= 50) {
+            bet10Button.setEnabled(b);
+            bet20Button.setEnabled(b);
+            bet50Button.setEnabled(b);
+        }
+        if (b && balance < 50) {
             bet10Button.setEnabled(b);
             bet20Button.setEnabled(b);
             bet50Button.setEnabled(false);
-        }if(b && balance < 20){
+        }
+        if (b && balance < 20) {
             bet10Button.setEnabled(b);
             bet20Button.setEnabled(false);
             bet50Button.setEnabled(false);
         }
     }
-    public void hitAndStickEnabled(boolean b){
+
+    public void hitAndStickEnabled(boolean b) {
         hitButton.setEnabled(b);
         stickButton.setEnabled(b);
     }
 
-    public void sendStickOrHit(int operation){
+    public void sendStickOrHit(int operation) {
         /**
-         * takes an int as the arguments specifying the operation.
-         * then creates a StickOrHit object with the players ID and the operation
-         * Then sends this back to the server
+         * takes an int as the arguments specifying the operation. then creates a
+         * StickOrHit object with the players ID and the operation Then sends this back
+         * to the server
          */
         try {
             outputStream.writeObject(new StickOrHit(this.ID, operation));
@@ -264,9 +363,10 @@ public class SwingGameClient extends JFrame implements ActionListener {
         /**
          * defines the required action for each button
          * 
-         * when a bet button is pressed it adds that amount to the class variable bet and
-         * updates the current bet label. When deal is then pressed it sends a bet object which is created
-         * with the bet variable and the client ID. And disables the bet and deal buttons
+         * when a bet button is pressed it adds that amount to the class variable bet
+         * and updates the current bet label. When deal is then pressed it sends a bet
+         * object which is created with the bet variable and the client ID. And disables
+         * the bet and deal buttons
          * 
          * when the hit or stick is clicked it sends a hitOrStick object to the server
          * when stick us clicked disables the hit and stick buttons
@@ -310,8 +410,9 @@ public class SwingGameClient extends JFrame implements ActionListener {
 
     public void initializeComponents() {
         /**
-         * initiates all the swing components needed to be editable for updating with current game info
-         * also initiates the buttons and adds action listeners to them
+         * initiates all the swing components needed to be editable for updating with
+         * current game info also initiates the buttons and adds action listeners to
+         * them
          */
         currentBet = 0;
         userCards = main.getUserCardPanels();

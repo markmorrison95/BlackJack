@@ -11,14 +11,17 @@ import javax.swing.border.EmptyBorder;
 import java.awt.GridLayout;
 
 /**
- * BettingPanel
+ * BettingPanel is the bottom panel on the window which displays the current balance, current bet and the current score.
+ * It also has the betting buttons (50, 20, 10) and the deal button
+ * 
+ * this class creates the components and handles formatting and layout. It also provides getters and setters for the
+ * buttons and labels which need to be accessed from outside this class.
  */
 public class BettingPanel extends JPanel {
     private JButton fifty, twenty, ten, deal;
     private JLabel currentBalance, currentBet, currentScore;
-
+    private Color darkGreen = new Color(0, 102, 0);
     public BettingPanel() {
-        Color darkGreen = new Color(0, 102, 0);
         this.setBackground(darkGreen);
         this.setLayout(new GridLayout(2,1));
 
@@ -34,27 +37,19 @@ public class BettingPanel extends JPanel {
         topRight.setLayout(new GridLayout(1, 2));
 
         JLabel currentScoreConstant = new JLabel("Your Current Score:");
-        currentScoreConstant.setFont(new Font("Serif", Font.BOLD, 18));
-        currentScoreConstant.setForeground(Color.yellow);
-        currentScoreConstant.setBackground(darkGreen);
-
+        labelFormatting(currentScoreConstant);
+        
         currentScore = new JLabel("");
-        currentScore.setFont(new Font("Serif", Font.BOLD, 18));
-        currentScore.setForeground(Color.yellow);
-        currentScore.setBackground(darkGreen);
+        labelFormatting(currentScore);
 
         topRight.add(currentScoreConstant);
         topRight.add(currentScore);
 
         JLabel currentBalanceConstant = new JLabel("Your Balance:", SwingConstants.RIGHT);
-        currentBalanceConstant.setFont(new Font("Serif", Font.BOLD, 18));
-        currentBalanceConstant.setForeground(Color.yellow);
-        currentBalanceConstant.setBackground(darkGreen);
+        labelFormatting(currentBalanceConstant);
 
         currentBalance = new JLabel("");
-        currentBalance.setFont(new Font("Serif", Font.BOLD, 18));
-        currentBalance.setBackground(darkGreen);
-        currentBalance.setForeground(Color.yellow);
+        labelFormatting(currentBalance);
 
 
         topLeft.add(currentBalanceConstant);
@@ -65,14 +60,10 @@ public class BettingPanel extends JPanel {
         top.add(topRight);
 
         JLabel currentBetConstant = new JLabel("CurrentBet:", SwingConstants.LEFT);
-        currentBetConstant.setFont(new Font("Serif", Font.BOLD, 18));
-        currentBetConstant.setForeground(Color.yellow);
-        currentBetConstant.setBackground(darkGreen);
+        labelFormatting(currentBetConstant);
 
         currentBet = new JLabel();
-        currentBet.setFont(new Font("Serif", Font.BOLD, 18));
-        currentBet.setForeground(Color.yellow);
-        currentBet.setBackground(darkGreen);
+        labelFormatting(currentBet);
 
         JPanel bottom = new JPanel();
         bottom.setBackground(darkGreen);
@@ -109,6 +100,12 @@ public class BettingPanel extends JPanel {
         bottom.add(bottomRight);
         this.add(top);
         this.add(bottom);
+    }
+
+    private void labelFormatting(JLabel l){
+        l.setFont(new Font("Serif", Font.BOLD, 18));
+        l.setForeground(Color.yellow);
+        l.setBackground(darkGreen);
     }
 
     public JButton getFiftyButton(){
