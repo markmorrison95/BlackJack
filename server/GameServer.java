@@ -36,6 +36,13 @@ public class GameServer implements Runnable {
             Socket clientSocket = null;
             try {
                 while(true){
+                    /**
+                     * continuously looks for a client to connect, when one is accepted then sends them 
+                     * their clientID, adds a new user to the game, creates a new ClientRunner for them,
+                     * adds them to the clients list and starts a thread for them
+                     * 
+                     * increases clientID each round so this a unique variable
+                     */
                 clientSocket = serverSocket.accept();
                 ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
                 outputStream.writeInt(clientID);
@@ -53,13 +60,18 @@ public class GameServer implements Runnable {
         }
     }
     public void hitCards(StickOrHit stickOrHit){
+        /**
+         * passes a stickOrHitObject to the controller method
+         */
         controller.hitCards(stickOrHit);
     }
     public void stickCards(){
+        //tells the controller that the active player is sticking
         controller.stickCards(); 
     }
 
     public void makeBet(Bet bet){
+        // passes bet object to controller
         controller.placeBet(bet);
     }
     public void transmitFirstRoundWinner(boolean b) {
@@ -68,7 +80,12 @@ public class GameServer implements Runnable {
                 cr.setFirstRoundWinner(b);
         }
     }
-    public void clientLeft(int ID){
+    public void clientHasLeft(int ID){
+        /**
+         * called when a client closes their window and leaves the game
+         * this removes them from the clients list and removes them
+         * from the gameStats hashMap
+         */
         for(ClientRunner cr : clients){
             if(cr.getID() == ID){
                 clients.remove(cr);
@@ -80,6 +97,10 @@ public class GameServer implements Runnable {
     }
 
     public void removeClient(int ID){
+        /**
+         * removes a client manually by closing their connection
+         * and removing them from the clients list
+         */
         for(ClientRunner cr : clients){
             if(cr.getID() == ID){
                 cr.closeClient();

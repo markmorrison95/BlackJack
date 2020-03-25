@@ -5,9 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-
 import javax.swing.*;
-
 import model.Bet;
 import model.Card;
 import model.GameStats;
@@ -21,15 +19,15 @@ import java.awt.event.ActionListener;
 /**
  * GameClient
  */
-public class SwingGameClient extends JFrame implements ActionListener {
+public class Client extends JFrame implements ActionListener {
 
    /****** Swing Worker Class *********************************************************** */ 
     private class ReadWorker extends SwingWorker<Void, Void> {
         private Socket socket = null;
         private ObjectInputStream inputStream = null;
-        private SwingGameClient parent = null;
+        private Client parent = null;
 
-        public ReadWorker(Socket socket, SwingGameClient parent) {
+        public ReadWorker(Socket socket, Client parent) {
             this.socket = socket;
             this.parent = parent;
             try {
@@ -75,7 +73,7 @@ public class SwingGameClient extends JFrame implements ActionListener {
     private Socket server = null;
     private ObjectOutputStream outputStream;
 
-    public SwingGameClient() {
+    public Client() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         main = new MainPanel();
         this.add(main);
@@ -439,6 +437,6 @@ public class SwingGameClient extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new SwingGameClient();
+        new Client();
     }
 }

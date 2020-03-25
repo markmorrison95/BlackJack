@@ -8,7 +8,12 @@ import javax.swing.border.EmptyBorder;
 import java.awt.GridLayout;
 
 /**
- * CardPanel
+ * clientCardPanel
+ * 
+ * this is the middle panel which displays the users card and the buttons for hit and stick
+ * just creates the layout and buttons and allows access to the buttons 
+ * 
+ * returns the panels where the cards will be displayed as an array list of JPanels
  */
 public class ClientCardPanel extends JPanel {
     private JPanel cardOne, cardTwo, cardThree, cardFour, cardFive, cardSix, cardSeven;
@@ -18,7 +23,7 @@ public class ClientCardPanel extends JPanel {
         this.setBackground(new Color(0, 102, 0));
         this.setBorder(new EmptyBorder(0, 30, 0, 30));
         GridLayout layout = new GridLayout(1,9);
-        layout.setHgap(25);
+        layout.setHgap(10);
         this.setLayout(layout);
         hit = new JButton("Hit");
         hit.setEnabled(false);

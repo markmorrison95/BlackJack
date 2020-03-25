@@ -6,7 +6,12 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
- * Swing
+ * mainPanel
+ * 
+ * this adds al the components from the other swing classes together and formats them in one panel. 
+ * it also adds a middle panel with the game info and active player labels
+ * 
+ * getters to access all the components from all the panels
  */
 public class MainPanel extends JPanel {
     DealerPanel dealer;

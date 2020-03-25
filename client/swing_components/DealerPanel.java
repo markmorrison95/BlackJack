@@ -1,8 +1,8 @@
 package client.swing_components;
-
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -11,32 +11,35 @@ import java.awt.GridLayout;
 import javax.swing.border.EmptyBorder;
 
 /**
- * cardPanel
+ * DealerPanel
+ * 
+ * Creates and formats the panels for displaying the dealers cards. Also displays the current score for the dealer
+ * and the no of players in the game.
+ * 
+ * Has getters for accessing the card panels and the labels. returns the card panels as an Array of JPanels
  */
-public class DealerPanel extends JPanel{
+public class DealerPanel extends JPanel {
     private JPanel cardOne, cardTwo, cardThree, cardFour, cardFive, cardSix, cardSeven, dealerInfo, noPlayersPanel;
     private JLabel dealerScore, noPlayers;
+    private Color darkGreen = new Color(0, 102, 0);
 
     public DealerPanel(){
-        Color darkGreen = new Color(0, 102, 0);
         this.setBackground(darkGreen);
         this.setBorder(new EmptyBorder(10, 30, 0, 30));
         GridLayout layout = new GridLayout(1,9);
-        layout.setHgap(25);
+        this.setBackground(darkGreen);
+        layout.setHgap(10);
         this.setLayout(layout);
 
         noPlayersPanel = new JPanel();
         noPlayersPanel.setBackground(darkGreen);
         noPlayersPanel.setLayout(new GridLayout(2,1));
         JLabel noPlayersConstant = new JLabel("No. of Players:", SwingConstants.CENTER);
-        noPlayersConstant.setFont(new Font("Serif", Font.BOLD, 12));
-        noPlayersConstant.setForeground(Color.yellow);
+        formatComponent(noPlayersConstant, 12);
         noPlayers = new JLabel("", SwingConstants.CENTER);
-        noPlayers.setFont(new Font("Serif", Font.BOLD, 20));
-        noPlayers.setForeground(Color.yellow);
+        formatComponent(noPlayers, 20);
         noPlayersPanel.add(noPlayersConstant);
         noPlayersPanel.add(noPlayers);
-
 
 
         cardOne = new JPanel();
@@ -64,11 +67,9 @@ public class DealerPanel extends JPanel{
         dealerInfo.setBackground(darkGreen);
         dealerInfo.setLayout(new GridLayout(2,1));
         JLabel dealerConstant = new JLabel("Dealer\nScore:", SwingConstants.CENTER);
-        dealerConstant.setFont(new Font("Serif", Font.BOLD, 12));
-        dealerConstant.setForeground(Color.yellow);
+        formatComponent(dealerConstant, 12); 
         dealerScore = new JLabel("", SwingConstants.CENTER);
-        dealerScore.setFont(new Font("Serif", Font.BOLD, 20));
-        dealerScore.setForeground(Color.yellow);
+        formatComponent(dealerScore, 20);
         dealerInfo.add(dealerConstant);
         dealerInfo.add(dealerScore);
         this.add(noPlayersPanel);
@@ -80,6 +81,12 @@ public class DealerPanel extends JPanel{
         this.add(cardSix);
         this.add(cardSeven);
         this.add(dealerInfo);
+    }
+
+    private void formatComponent(JComponent c, int fontSize){
+        c.setBackground(darkGreen);
+        c.setFont(new Font("Serif", Font.BOLD, fontSize));
+        c.setForeground(Color.yellow);
     }
 
     public JPanel[] getDealerCardPanels(){
