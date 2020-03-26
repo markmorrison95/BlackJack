@@ -83,6 +83,22 @@ public class Controller {
         }
     }
 
+    public boolean blackjackWinnerCheck() {
+        /**
+         * checks for a player who has 21, this if called after the first round is dealt
+         * if a player or players have 21 they automatically win
+         */
+        boolean isBlackJackWin = false;
+        for (Player p : gameStats.values()) {
+            if (p.getCurrentScore() == 21) {
+                p.blackjackWin();
+                gameStats.addOneWinner(p);
+                isBlackJackWin = true;
+            }
+        }
+        return isBlackJackWin;
+    }
+
 
 
     public void winCheck() {
