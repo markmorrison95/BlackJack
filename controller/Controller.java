@@ -36,8 +36,9 @@ public class Controller {
          * finds the one player left and resets their balance. Sets the reset label 
          * in game stats to true and transmits the info to the client
          * 
-         * clears both the main deck and the used deck and re reads in the cards file
-         * calss the next round info to start new round
+         * refills the main deck of cards and shuffles
+         * changes the resetGame boolean in gameStats back to false
+         * and goes start new round
          * 
          */
         gameStats.resetGame(true);
