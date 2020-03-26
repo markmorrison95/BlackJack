@@ -6,11 +6,10 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import javax.swing.*;
-import model.Bet;
+import model.UserOperation;
 import model.Card;
 import model.GameStats;
 import model.Player;
-import model.StickOrHit;
 import client.swing_components.*;
 
 import java.awt.event.ActionEvent;
@@ -48,7 +47,11 @@ public class Client extends JFrame implements ActionListener {
                     parent.updateGameInfo(gs);
                 }
             } catch (IOException e) {
-                gameInfoLabel.setText("You exited the Game");
+                /**
+                 * if the player loses all their money while others are still playing 
+                 * they are kicked out and this message is displayed
+                 */
+                gameInfoLabel.setText("You Lost All Your Money, You Exited the Game");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -165,7 +168,7 @@ public class Client extends JFrame implements ActionListener {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        sendStickOrHit(-1);
+                        sendUserOperation(-1);
                     }
                     /**
                      * if it is the dealer to go, sets the label to represent this and there cards
@@ -336,14 +339,14 @@ public class Client extends JFrame implements ActionListener {
         stickButton.setEnabled(b);
     }
 
-    public void sendStickOrHit(int operation) {
+    public void sendUserOperation(int operation) {
         /**
          * takes an int as the arguments specifying the operation. then creates a
-         * StickOrHit object with the players ID and the operation Then sends this back
+         * userOperation object with the players ID and the operation Then sends this back
          * to the server
          */
         try {
-            outputStream.writeObject(new StickOrHit(this.ID, operation));
+            outputStream.writeObject(new UserOperation(this.ID, operation));
             outputStream.reset();
         } catch (IOException e1) {
             e1.printStackTrace();
@@ -356,30 +359,24 @@ public class Client extends JFrame implements ActionListener {
          * defines the required action for each button
          * 
          * when a bet button is pressed it adds that amount to the class variable bet
-         * and updates the current bet label. When deal is then pressed it sends a bet
+         * and updates the current bet label. When deal is then pressed it sends a UserOperation
          * object which is created with the bet variable and the client ID. And disables
          * the bet and deal buttons
          * 
-         * when the hit or stick is clicked it sends a hitOrStick object to the server
-         * when stick us clicked disables the hit and stick buttons
+         * when the hit or stick is clicked it sends a UserOperation object to the server with the operation
+         * when stick is clicked the hit and stick buttons are disables
          */
         if (e.getSource() == dealButton) {
-            try {
-                outputStream.writeObject(new Bet(ID, currentBet));
-                outputStream.reset();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            } finally {
-                betButtonsEnabled(false, 0);
-                dealButton.setEnabled(false);
-                gameInfoLabel.setText("Waiting for other Players to Place Bets");
-            }
+            sendUserOperation(currentBet);
+            betButtonsEnabled(false, 0);
+            dealButton.setEnabled(false);
+            gameInfoLabel.setText("Waiting for other Players to Place Bets");
         }
         if (e.getSource() == hitButton) {
-            sendStickOrHit(1);
+            sendUserOperation(1);
         }
         if (e.getSource() == stickButton) {
-            sendStickOrHit(-1);
+            sendUserOperation(-1);
             hitAndStickEnabled(false);
         }
         if (e.getSource() == bet10Button) {

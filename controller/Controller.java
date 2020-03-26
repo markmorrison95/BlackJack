@@ -1,11 +1,6 @@
 package controller;
-
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import model.*;
-import model.enums.*;
 import server.GameServer;
 
 /**
@@ -22,7 +17,7 @@ public class Controller {
         mainDeck = new Deck();
         usedDeck = new Deck();
         gameStats = new GameStats(mainDeck);
-        readInCards();
+        mainDeck.addAll(ReadInCards.readInCards());
         mainDeck.shuffleDeck();
         dealer = new Dealer();
         gameStats.addPlayer(dealer);
@@ -36,6 +31,16 @@ public class Controller {
     }
 
     public void resetGame() {
+        /**
+         * when one player is left and has run out of money it will reset the game
+         * finds the one player left and resets their balance. Sets the reset label 
+         * in game stats to true and transmits the info to the client
+         * 
+         * refills the main deck of cards and shuffles
+         * changes the resetGame boolean in gameStats back to false
+         * and goes start new round
+         * 
+         */
         gameStats.resetGame(true);
         for (Player p : gameStats.values()) {
             if (p.getID() != 0) {
@@ -48,16 +53,23 @@ public class Controller {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        usedDeck.clear();
-        mainDeck.clear();
-        readInCards();
+        refillDeck();
+        mainDeck.shuffleDeck();
         gameStats.resetGame(false);
         nextRound();
     }
 
-    public void placeBet(Bet bet) {
-        Player p = gameStats.get(bet.getPlayerId());
-        p.makeBet(bet.getBetAmount());
+    public void placeBet(UserOperation bet) {
+        /**
+         * takes a bet object as arguments and gets the player with the
+         * correspondin ID and makes the bet with the amount 
+         *
+         * if the number of bets that has been made is the same as the amount of
+         * people in the gameStats hashmap -1 then all the players have made a bet
+         * and the cards can be dealt
+         */
+        Player p = gameStats.get(bet.getID());
+        p.makeBet(bet.getUserOperation());
         gameStats.betMade();
         if (gameStats.getNoBets() == (gameStats.size() - 1)) {
             gameStats.allBetsReceived();
@@ -66,15 +78,25 @@ public class Controller {
 
     }
 
-    public void hitCards(StickOrHit s) {
+    public void hitCards(UserOperation userOp) {
+        /**
+         * checks if the deck of cards needs to be refilled. 
+         * adds a card to the hand of the player ID in the object
+         * then transmits the updated info to the clients
+         */
         if (mainDeck.refillTime()) {
             refillDeck();
         }
-        gameStats.get(s.getID()).add(mainDeck.getAndRemoveCard());
+        gameStats.get(userOp.getID()).add(mainDeck.getAndRemoveCard());
         gameServer.transmitStatsToAll();
     }
 
     public void stickCards() {
+        /**
+         * checks if the player ID is the highest one in the map and if so
+         * must be the last player to go and can move to the dealers round
+         * if not increases the activePlayer so the next user can go
+         */
         if (gameStats.getActivePlayer() == gameStats.getMaxUserID()) {
             dealerRound();
         } else {
@@ -106,6 +128,9 @@ public class Controller {
          * checks for players that have 21 first and adds them to an arraylist if there
          * is no one with 21 then will find the score or equal scores that are closest
          * to 21. these need to be under 21 to count
+         * 
+         * then deals with the bets have been placed depending whether they have
+         * won lost or drawn
          */
         ArrayList<Player> winners = new ArrayList<>();
         for (Player p : gameStats.values()) {
@@ -226,7 +251,6 @@ public class Controller {
             }
         }
         boolean win = blackjackWinnerCheck();
-        gameServer.transmitFirstRoundWinner(win);
         gameServer.transmitStatsToAll();
         if(win){nextRound();}
     }
@@ -273,28 +297,6 @@ public class Controller {
         mainDeck.addAll(usedDeck);
         usedDeck.clear();
         mainDeck.shuffleDeck();
-    }
-
-    public void readInCards() {
-        /**
-         * reads in the deck of cards file and creates a new card object with each line
-         * then adds these to the mainDeck
-         */
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(new File("loadedCards.txt"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        while (scanner.hasNextLine()) {
-            String suit = scanner.next();
-            String value = scanner.next();
-            if (scanner.hasNextLine()) {
-                scanner.nextLine();
-            }
-            mainDeck.addCard(new Card(Suit.valueOf(suit), CardValue.valueOf(value)));
-        }
-        scanner.close();
     }
 
     public static void main(String[] args) {

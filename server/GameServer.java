@@ -7,10 +7,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import controller.Controller;
-import model.Bet;
+import model.UserOperation;
 import model.GameStats;
-import model.StickOrHit;
-
 /**
  * GameServer
  */
@@ -59,26 +57,20 @@ public class GameServer implements Runnable {
             }
         }
     }
-    public void hitCards(StickOrHit stickOrHit){
+    public void hitCards(UserOperation userOp){
         /**
          * passes a stickOrHitObject to the controller method
          */
-        controller.hitCards(stickOrHit);
+        controller.hitCards(userOp);
     }
     public void stickCards(){
         //tells the controller that the active player is sticking
         controller.stickCards(); 
     }
 
-    public void makeBet(Bet bet){
+    public void makeBet(UserOperation bet){
         // passes bet object to controller
         controller.placeBet(bet);
-    }
-    public void transmitFirstRoundWinner(boolean b) {
-        // send game stats to all clients connected
-        for (ClientRunner cr : clients) {
-                cr.setFirstRoundWinner(b);
-        }
     }
     public void clientHasLeft(int ID){
         /**
