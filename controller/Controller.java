@@ -1,11 +1,6 @@
 package controller;
-
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import model.*;
-import model.enums.*;
 import server.GameServer;
 
 /**
@@ -22,7 +17,7 @@ public class Controller {
         mainDeck = new Deck();
         usedDeck = new Deck();
         gameStats = new GameStats(mainDeck);
-        readInCards();
+        mainDeck.addAll(ReadInCards.readInCards());
         mainDeck.shuffleDeck();
         dealer = new Dealer();
         gameStats.addPlayer(dealer);
@@ -48,16 +43,15 @@ public class Controller {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        usedDeck.clear();
-        mainDeck.clear();
-        readInCards();
+        refillDeck();
+        mainDeck.shuffleDeck();
         gameStats.resetGame(false);
         nextRound();
     }
 
-    public void placeBet(Bet bet) {
-        Player p = gameStats.get(bet.getPlayerId());
-        p.makeBet(bet.getBetAmount());
+    public void placeBet(UserOperation bet) {
+        Player p = gameStats.get(bet.getID());
+        p.makeBet(bet.getUserOperation());
         gameStats.betMade();
         if (gameStats.getNoBets() == (gameStats.size() - 1)) {
             gameStats.allBetsReceived();
@@ -66,11 +60,11 @@ public class Controller {
 
     }
 
-    public void hitCards(StickOrHit s) {
+    public void hitCards(UserOperation userOp) {
         if (mainDeck.refillTime()) {
             refillDeck();
         }
-        gameStats.get(s.getID()).add(mainDeck.getAndRemoveCard());
+        gameStats.get(userOp.getID()).add(mainDeck.getAndRemoveCard());
         gameServer.transmitStatsToAll();
     }
 
@@ -226,7 +220,6 @@ public class Controller {
             }
         }
         boolean win = blackjackWinnerCheck();
-        gameServer.transmitFirstRoundWinner(win);
         gameServer.transmitStatsToAll();
         if(win){nextRound();}
     }
@@ -273,28 +266,6 @@ public class Controller {
         mainDeck.addAll(usedDeck);
         usedDeck.clear();
         mainDeck.shuffleDeck();
-    }
-
-    public void readInCards() {
-        /**
-         * reads in the deck of cards file and creates a new card object with each line
-         * then adds these to the mainDeck
-         */
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(new File("loadedCards.txt"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        while (scanner.hasNextLine()) {
-            String suit = scanner.next();
-            String value = scanner.next();
-            if (scanner.hasNextLine()) {
-                scanner.nextLine();
-            }
-            mainDeck.addCard(new Card(Suit.valueOf(suit), CardValue.valueOf(value)));
-        }
-        scanner.close();
     }
 
     public static void main(String[] args) {

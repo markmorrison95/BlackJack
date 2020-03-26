@@ -6,17 +6,17 @@ import java.io.Serializable;
  * Bet object which contains a players ID and a bet amount
  * this is used to pass the best between the client and the server
  */
-public class Bet implements Serializable{
-    private int betAmount, playerID;
-    public Bet(int playerID, int betAmount){
+public class UserOperation implements Serializable{
+    private int number, playerID;
+    public UserOperation(int playerID, int number){
         this.playerID = playerID;
-        this.betAmount = betAmount;
+        this.number = number;
     }
 
-    public int getBetAmount(){
-        return this.betAmount;
+    public int getUserOperation(){
+        return this.number;
     }
-    public int getPlayerId(){
+    public int getID(){
         return this.playerID;
     }
 }
