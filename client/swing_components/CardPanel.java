@@ -1,7 +1,6 @@
 package client.swing_components;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
 import model.enums.*;
 
