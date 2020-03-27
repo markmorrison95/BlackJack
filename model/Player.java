@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * a current bet amount
  */
 public class Player extends ArrayList<Card>{
-    private int ID;
+    private final int ID;
     private int balance;
     private int currentBet;
     public Player(int ID, int money){

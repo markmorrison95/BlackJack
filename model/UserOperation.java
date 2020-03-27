@@ -7,7 +7,7 @@ import java.io.Serializable;
  * this is used to pass the best between the client and the server
  */
 public class UserOperation implements Serializable{
-    private int number, playerID;
+    private final int number, playerID;
     public UserOperation(int playerID, int number){
         this.playerID = playerID;
         this.number = number;

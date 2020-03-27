@@ -72,7 +72,7 @@ public class GameServer implements Runnable {
         // passes bet object to controller
         controller.placeBet(bet);
     }
-    public void clientHasLeft(int ID){
+    public synchronized void clientHasLeft(int ID){
         /**
          * called when a client closes their window and leaves the game
          * this removes them from the clients list and removes them
@@ -88,7 +88,7 @@ public class GameServer implements Runnable {
         transmitStatsToAll();
     }
 
-    public void removeClient(int ID){
+    public synchronized void removeClient(int ID){
         /**
          * removes a client manually by closing their connection
          * and removing them from the clients list

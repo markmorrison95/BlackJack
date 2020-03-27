@@ -8,8 +8,8 @@ import model.enums.*;
  * Card uses enums to represent the suit of the card and the rank of the card
  */
 public class Card implements Serializable{
-    private CardValue rank;
-    private Suit suit;
+    private final CardValue rank;
+    private final Suit suit;
     public Card(Suit suit, CardValue rank){
         this.suit = suit;
         this.rank = rank;
